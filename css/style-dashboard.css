@@ -1,0 +1,303 @@
+/* ini css untuk semua admin */
+/* DASHBOARD di semua halaman admin */
+
+body{
+    margin:0;
+    font-family:'Poppins', sans-serif !important;
+    background:var(--background);
+}
+:root {
+	--primary: #122056;
+	--secondary: #5B65DC;
+	--light-blue: #EEEFFD;
+	--background: #FAFAFD;
+	--white: #FFFFFF;
+    --accent  : #FF5A7A;
+    --textGelap : #2A2A2A;
+  }
+/* layout utama */
+
+.dashboard{
+    display:flex;
+    min-height:100vh;
+}
+
+
+/* SIDEBAR  DEKSTOP*/ 
+.sidebar {
+    width: 220px;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    padding: 20px;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+    transition: left 0.3s ease;
+    z-index: 200;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.sidebar ul{
+    list-style:none;
+    padding:5px;
+}
+
+.sidebar ul li{
+    margin:25px 0;
+}
+
+.sidebar ul li a{
+    text-decoration:none;
+    color:white;
+    padding-left: 10px;
+    /* atur jarak tulisan dgn icon pake padding*/
+}
+
+.close-btn {
+    display: none; /* hanya muncul di mobile */
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* css semua isi konten diluar sidebar */
+.main {
+    margin-left: 230px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.3s ease;
+    position: relative;
+    z-index: 1;  /* di bawah sidebar */
+}
+
+/* Topbar */
+.topbar {
+    background-color: var(--white);
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    margin-left: 27px; /* geser sesuai lebar sidebar */
+}
+
+.toggle-btn {
+    cursor: pointer;
+    font-size: 24px;
+    display: none; /* hanya muncul di mobile */
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        width: 220px;          /* ukuran sidebar tetap, jangan 100% dulu */
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow: hidden;
+        transform: translateX(-100%); /* geser keluar */
+        transition: transform 0.3s ease;
+        z-index: 999;           /* pastikan di atas semua */
+    }
+
+    .sidebar.open {
+        transform: translateX(0);  /* tampil */
+    }
+
+    .main {
+        margin-left: 0;
+    }
+    
+     /* Topbar fullscreen */
+     .topbar {
+        margin-left: 0;      /* hilangkan geser */
+        width: 100%;         /* penuh kiri-kanan */
+        box-sizing: border-box; /* supaya padding tidak melebihi layar */
+    }
+    .toggle-btn {
+        display: block;
+    }
+
+    .close-btn {
+        display: block;
+    }
+}
+
+
+/* CARDS */
+
+.cards{
+    display:flex;
+    gap:20px;
+    padding:20px;
+}
+
+.card{
+    background-color:var(--white);
+    padding:20px;
+    border-radius:8px;
+    width:200px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
+    margin-left: 25px;
+}
+
+.card h4{
+    margin:0;
+    color: var(--secondary);
+}
+
+.card p{
+    font-size:24px;
+    margin-top:10px;
+    color: var(--primary);
+}
+
+
+
+/* CONTENT */
+
+.content{
+    padding:20px;
+}
+
+/* profile admin */
+.admin {
+    display: flex;
+    color: var(--primary);
+    font-weight: bold;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+/* css di halaman user (crud) */
+/* data user */
+.user{
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+}
+
+table {
+    z-index: 2;
+    left: 0%;
+    top: 0px;
+    /* transform: translate(-50%,-50%); */
+    /* width: 60%;  */
+    border-collapse: collapse;
+    border-spacing: 0;
+    /* box-shadow: 0 2px 15px rgba(64,64,64,.7); */
+    /* border-radius: 12px 12px 0 0; */
+    overflow: hidden;
+    width: 100%;
+    border: none;
+   }
+   
+td , th{
+   padding: 15px 20px;
+   text-align: center;   
+   border: none;     
+}
+      
+th{
+   background-color: var(--accent);
+   color: var(--white);
+   font-family: 'Dosis', sans-serif;
+   font-weight: bold;
+   letter-spacing: 3px;
+   text-transform: uppercase;   
+}
+      
+tr{
+   width: 100%;
+   background-color: #fafafa;
+   font-family: 'Dosis', sans-serif;
+   color: var(--textGelap)
+}
+      
+tr:nth-child(even){
+   background-color: #eeeeee;
+}
+
+/* ADD USER */
+.boxTambahUser{
+    width:100%;
+    display:flex;
+    justify-content:center;   /* tengah horizontal */
+    align-items:flex-start;      /* tengah vertical */
+    padding-top:10px;
+}
+
+.formInput{
+    width:350px;
+    padding:40px;
+    background:var(--white);
+    box-shadow:0 10px 15px rgba(0,0,0,0.1);
+    border-radius:8px;
+    justify-content: center;
+    margin-top: 20px;
+}
+.formInput h2{
+    color: var(--primary);
+    text-align: center;
+}
+
+.formInput input{
+    width:100%;
+    padding:10px;
+    /* margin-bottom */
+    border-radius:6px;
+    border:1px solid #ddd;
+    box-sizing:border-box;
+    background:var(--white);
+}
+
+.formInput select{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:6px;
+    border:1px solid #ddd;
+    box-sizing:border-box;
+    background:var(--accent);
+    color: var(--light-blue);
+    
+}
+
+.formInput label{
+    color: var(--primary);
+    font-size: small;
+    font-weight: bold;
+    /* padding:10px;
+    margin:8px 0; */
+}
+
+.formInput button{
+    width:100%;
+    padding:10px;
+    background:var(--secondary);
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.formInput button:hover{
+    background:var(--primary);
+}

@@ -1,0 +1,41 @@
+D:\xampp\htdocs\rs_management
+│
+├── config
+│   └── koneksi.php        <-- hanya koneksi / konfigurasi
+│
+├── login.php              <-- halaman login
+├── login_process.php      <-- proses login
+├── logout.php             <-- proses logout
+│
+├── admin
+│   └── dashboard.php
+├── staff
+│   └── dashboard.php
+└── doctor
+    └── patients.php
+
+Login
+1. Admin
+- dashboard admin
+- create user
+- rud user + list user
+- rud pasien + sekaligus list pasien
+- detail pasien
+
+2. Staff
+- dashboard staff
+- list dokter
+- detail dokter
+- create pasien
+- rud pasien + sekaligus list pasien
+- detail pasien
+
+3. Dokter
+- list pasien berdasarkan dokter
+- detail pasien
+- tambah/update rekam medis
+
+
+dokter_id di sini mengacu ke tabel users yang role-nya dokter.
+
+jenis_kelamin pakai 'L' untuk laki-laki, 'P' untuk perempuan.

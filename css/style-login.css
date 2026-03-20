@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+* {
+	box-sizing: border-box;
+}
+:root {
+	--primary: #122056;
+	--secondary: #5B65DC;
+	--light-blue: #EEEFFD;
+	--background: #FAFAFD;
+	--white: #FFFFFF;
+    --accent  : #FF5A7A;
+    --textGelap : #2A2A2A;
+  }
+
+body {
+	background: var(--background);
+	
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	font-family:'Poppins', sans-serif !important;
+	height: 100vh;
+	margin: -20px 0 50px;
+}
+
+
+button {
+	border-radius: 20px;
+	color: var(--secondary);
+	font-size: 12px;
+	font-weight: bold;
+	padding: 12px 45px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	transition: transform 80ms ease-in;
+}
+
+button:active {
+	transform: scale(0.95);
+}
+
+button:focus {
+	outline: none;
+}
+
+button:hover{
+    cursor: pointer;
+}
+
+button.button {
+	background-color: var(--secondary);
+	border-color: #FFFFFF;
+}
+
+/* form input kiri */
+form {
+	background-color: var(--background);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	padding: 20px 50px;
+	text-align: center;
+}
+
+input {
+	background-color: var(--light-blue);
+	border: 1;
+	padding: 12px 15px;
+	margin: 5px 0;
+	width: 100%;
+    border-radius: 10px;
+    /* margin-bottom: 20px; */
+}
+
+/* container */
+.container {
+	display: flex;
+	border-radius: 10px;
+	box-shadow: 0 14px 28px rgba(0,0,0,0.25),
+	            0 10px 10px rgba(0,0,0,0.22);
+	width: 768px;
+	max-width: 100%;
+	min-height: 480px;
+	overflow: hidden;
+}
+
+.logo{
+    width: fit-content;
+    margin-bottom: 0px;
+}
+
+/* sisi kiri container */
+.box.login {
+	flex: 1;
+	background: #ffffff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+    padding-bottom: 100px;
+}
+
+/* sisi kanan container */
+.box.side-right {
+	flex: 1;
+	background: linear-gradient(135deg, var(--primary), var(--secondary));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+.text-right h1{
+	font-size:40px;
+    color: var(--light-blue);
+    margin: 0;
+    margin-top: 50px;
+}
+
+.text-right p{
+    color: var(--light-blue);  
+    margin-top: 0px;
+    font-size:smaller;
+    font-style: italic;
+    margin: 0;
+    padding-bottom: 10px;
+}
+
+.fitur{
+    list-style:none;
+    padding:0;
+    margin-bottom:50px;
+}
+
+.fitur li{
+    margin:10px 0;
+    color:white;
+    font-size:14px;
+    letter-spacing:0.5px;
+    text-align: center;
+}
+
+/* css button login */
+.submit {
+    margin-top: 10px;
+    padding: 10px;
+    width: 97%;
+    border: 1px solid;
+    border-radius: 10px;
+
+    font-size: medium;
+
+    background-color: var(--secondary);
+    color: var(--white);
+}
+/* ketika klik button */
+.submit:hover {
+    background-color: var(--primary);
+    cursor: pointer;
+}
+
