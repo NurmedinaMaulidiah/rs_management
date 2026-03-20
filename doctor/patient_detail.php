@@ -39,6 +39,7 @@ if(isset($_POST['add_medical'])){
     exit;
 }
 ?>
+
 <h2>Detail Pasien</h2>
 <p>Nama: <?= $patient['nama_pasien'] ?></p>
 <p>Layanan: <?= $patient['nama_layanan'] ?></p>
@@ -50,6 +51,7 @@ if(isset($_POST['add_medical'])){
     <th>Keluhan</th>
     <th>Diagnosa</th>
     <th>Tindakan</th>
+    <th>Aksi</th>
 </tr>
 <?php while($m = mysqli_fetch_assoc($medicals)) { ?>
 <tr>
@@ -57,6 +59,10 @@ if(isset($_POST['add_medical'])){
     <td><?= $m['keluhan'] ?></td>
     <td><?= $m['diagnosa'] ?></td>
     <td><?= $m['tindakan'] ?></td>
+    <td>
+        <!-- Link ke halaman edit rekam medis -->
+        <a href="medical_edit.php?id=<?= $m['id'] ?>">Edit</a>
+    </td>
 </tr>
 <?php } ?>
 </table>

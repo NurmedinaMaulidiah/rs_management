@@ -1,41 +1,164 @@
-D:\xampp\htdocs\rs_management
-│
-├── config
-│   └── koneksi.php        <-- hanya koneksi / konfigurasi
-│
-├── login.php              <-- halaman login
-├── login_process.php      <-- proses login
-├── logout.php             <-- proses logout
-│
-├── admin
-│   └── dashboard.php
-├── staff
-│   └── dashboard.php
-└── doctor
-    └── patients.php
+Sistem manajemen pasien untuk Rumah Sakit:
 
-Login
-1. Admin
-- dashboard admin
-- create user
-- rud user + list user
-- rud pasien + sekaligus list pasien
-- detail pasien
+Admin: CRUD user, CRUD pasien, CRUD layanan, CRUD layanan yg diberikan dokter
 
-2. Staff
-- dashboard staff
-- list dokter
-- detail dokter
-- create pasien
-- rud pasien + sekaligus list pasien
-- detail pasien
+Staff: CRUD pasien, lihat daftar pasien, detail pasien (tanpa rekam medis).
 
-3. Dokter
-- list pasien berdasarkan dokter
-- detail pasien
-- tambah/update rekam medis
+Dokter: Lihat pasien yang ditangani, tambah/ubah rekam medis pasien.
 
 
-dokter_id di sini mengacu ke tabel users yang role-nya dokter.
+Database
 
-jenis_kelamin pakai 'L' untuk laki-laki, 'P' untuk perempuan.
+users
+| Kolom    | Tipe                           | Keterangan      |
+| -------- | ------------------------------ | --------------- |
+| id       | INT UNSIGNED AUTO_INCREMENT PK | ID user         |
+| nama     | VARCHAR(100)                   | Nama lengkap    |
+| username | VARCHAR(50)                    | Username login  |
+| password | VARCHAR(255)                   | Password (hash) |
+| role     | ENUM('admin','staff','dokter') | Role user       |
+
+
+services
+| Kolom        | Tipe                           | Keterangan      |
+| ------------ | ------------------------------ | --------------- |
+| id           | INT UNSIGNED AUTO_INCREMENT PK | ID layanan      |
+| nama_layanan | VARCHAR(255)                   | Nama layanan RS |
+
+
+doctor_services
+| Kolom      | Tipe                           | Keterangan          |
+| ---------- | ------------------------------ | ------------------- |
+| id         | INT UNSIGNED AUTO_INCREMENT PK | ID relasi           |
+| dokter_id  | INT UNSIGNED                   | FK ke `users.id`    |
+| service_id | INT UNSIGNED                   | FK ke `services.id` |
+
+
+patients
+| Kolom         | Tipe                           | Keterangan                          |
+| ------------- | ------------------------------ | ----------------------------------- |
+| id            | INT UNSIGNED AUTO_INCREMENT PK | ID pasien                           |
+| nama_pasien   | VARCHAR(100)                   | Nama pasien                         |
+| jenis_kelamin | ENUM('L','P')                  | Laki-laki / Perempuan               |
+| tanggal_lahir | DATE                           | Tanggal lahir                       |
+| alamat        | TEXT                           | Alamat pasien                       |
+| dokter_id     | INT UNSIGNED                   | Dokter penanggung jawab (FK users)  |
+| service_id    | INT UNSIGNED                   | Layanan yang diterima (FK services) |
+| created_at    | TIMESTAMP                      | Waktu input                         |
+| updated_at    | TIMESTAMP                      | Waktu update                        |
+
+medical records
+| Kolom      | Tipe                           | Keterangan               |
+| ---------- | ------------------------------ | ------------------------ |
+| id         | INT UNSIGNED AUTO_INCREMENT PK | ID rekam medis           |
+| patient_id | INT UNSIGNED                   | FK ke `patients.id`      |
+| keluhan    | TEXT                           | Keluhan pasien           |
+| diagnosa   | TEXT                           | Diagnosa dokter          |
+| tindakan   | TEXT                           | Tindakan yang diberikan  |
+| created_at | TIMESTAMP                      | Waktu rekam medis dibuat |
+
+
+
+
+HAK AKSES USER
+| User   | Hak Akses                                                                                          |
+| ------ | -------------------------------------------------------------------------------------------------- |
+| Admin  | CRUD user, CRUD pasien, CRUD layanan RS, CRUD layanan yg diberikan dokter, lihat semua pasien, lihat semua dokter                    |
+| Staff  | CRUD pasien, lihat daftar pasien, lihat detail pasien (tanpa rekam medis)                          |
+| Dokter | Lihat daftar pasien yang ditangani, lihat detail pasien, tambah/ubah rekam medis pasiennya sendiri |4. Alur Program / CRUD
+Admin
+
+Dashboard Admin → admin/dashboard.php
+
+CRUD User → admin/users.php, admin/user_add.php, admin/user_edit.php, admin/user_delete.php
+
+CRUD Pasien → admin/patients.php, admin/patient_add.php, admin/patient_edit.php, admin/patient_delete.php, admin/patient_detail.php
+
+CRUD Layanan RS → admin/services.php, admin/service_add.php, admin/service_edit.php, admin/service_delete.php
+
+Relasi Dokter-Layanan → admin/doctor_services.php, admin/doctor_service_add.php, admin/doctor_service_delete.php
+
+Staff
+
+Dashboard Staff → staff/dashboard.php
+
+CRUD Pasien → staff/patients_staff.php, staff/patient_add_staff.php, staff/patient_edit_staff.php, staff/patient_delete_staff.php, staff/patient_detail_staff.php
+
+Catatan: Staff tidak bisa menambah/ubah/hapus rekam medis, hanya lihat data pasien umum.
+
+Dokter
+
+Dashboard Dokter → doctor/dashboard.php
+
+Lihat Pasien Dokter → doctor/patients.php (hanya pasien yang ditangani)
+
+Detail Pasien & Rekam Medis → doctor/patient_detail.php
+
+CRUD Rekam Medis → doctor/medical_add.php, doctor/medical_edit.php, doctor/medical_delete.php
+
+Dokter hanya bisa melihat dan menambahkan rekam medis pasien yang ditangani.
+
+5. Alur CRUD Pasien (Staff & Admin)
+
+Tambah Pasien
+
+Pilih layanan → dropdown dokter otomatis sesuai layanan
+
+Isi nama, jenis kelamin, tanggal lahir, alamat
+
+Simpan ke tabel patients
+
+Edit Pasien
+
+Staff/Admin bisa edit semua kolom pasien
+
+Dokter tidak bisa edit pasien
+
+Hapus Pasien
+
+Staff/Admin bisa hapus pasien
+
+Rekam medis akan otomatis terhapus jika ON DELETE CASCADE
+
+Detail Pasien
+
+Admin: lihat data pasien + rekam medis
+
+Staff: lihat data pasien saja
+
+Dokter: lihat data pasien + rekam medis
+
+6. Rancangan Alur Program (Flow)
+[Login Page] 
+    ├─ Admin → Dashboard → Users / Patients / Services / Doctor-Services
+    │         ├─ CRUD User
+    │         ├─ CRUD Pasien
+    │         ├─ CRUD Layanan
+    │         └─ Relasi Dokter-Layanan
+    ├─ Staff → Dashboard → Patients
+    │         ├─ Tambah/Edit/Hapus Pasien
+    │         └─ Lihat Detail Pasien (Read Only)
+    └─ Dokter → Dashboard → Patients
+              ├─ Lihat Pasien yang ditangani
+              ├─ Lihat Detail Pasien + Rekam Medis
+              └─ Tambah/Edit/Hapus Rekam Medis
+
+
+Notes : 
+- jadi alurnya admin itu
+1. login
+2. crud user
+3. crud pasient (dimana dokter akan tampil sesuai layanan yg dipilih)
+4. crud layanan apa aja yg ada di rs
+4. crud dokter bisa kasi layanan apa (jadi ketika tambah pastient dokter yg tampil hanya sesuai dengan layanan yg dipilih)
+
+- staff
+1. login
+2. lihat pasien + detai (kecuali rekam medis)
+
+- doctor 
+1 pasiennya
+2. detail dan tambah rekam medis
+- doctor hanya bisa melakukan tambah rekam medis dan itu bisa dilakukan banyak kali (karena pasien bisa punya banyak rekam medis)
+
+
