@@ -44,7 +44,7 @@ $totalDoctor = mysqli_fetch_assoc($totalDoctorQuery)['total'];
             <li><i class="fa-solid fa-chart-line"></i><a href="dashboard.php">Dashboard</a></li>
             <li><i class="fa-solid fa-users"></i><a href="users.php">Users</a></li>
             <li><i class="fa-solid fa-hospital-user"></i><a href="patients.php">Patients</a></li>
-            <li><i class="fa-solid fa-hospital-user"></i><a href="services.php">Layanan</a></li>
+            <li><i class="fa-solid fa-notes-medical"></i><a href="services.php">Layanan Rumah Sakit</a></li>
             <li><i class="fa-solid fa-stethoscope"></i> <a href="doctor_services.php">Dokter dan Layanan</a></li>
             <li><i class="fa-solid fa-right-from-bracket"></i><a href="../logout.php">Logout</a></li>
 

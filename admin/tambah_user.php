@@ -4,15 +4,67 @@ require '../config/koneksi.php';
 
 if(isset($_POST['submit'])){
 
-$nama = $_POST['nama'];
-$username = $_POST['username'];
-$password = $_POST['password'];
+$nama = trim($_POST['nama']);
+$username = trim($_POST['username']);
+$password = trim($_POST['password']);
 $role = $_POST['role'];
 
-mysqli_query($conn,"INSERT INTO users (nama,username,password,role)
+/* VALIDASI FORM */
+
+// nama wajib
+if(empty($nama)){
+    echo "<script>alert('Nama harus diisi!');window.history.back();</script>";
+    exit;
+}
+
+// username wajib
+if(empty($username)){
+    echo "<script>alert('Username harus diisi!');window.history.back();</script>";
+    exit;
+}
+
+// password wajib
+if(empty($password)){
+    echo "<script>alert('Password harus diisi!');window.history.back();</script>";
+    exit;
+}
+
+// nama hanya huruf
+if(!preg_match("/^[a-zA-Z ]*$/",$nama)){
+    echo "<script>alert('Nama hanya boleh huruf!');window.history.back();</script>";
+    exit;
+}
+
+// password minimal 6
+if(strlen($password) < 6){
+    echo "<script>alert('Password minimal 6 karakter!');window.history.back();</script>";
+    exit;
+}
+
+// cek username sudah ada atau belum
+$cek = mysqli_query($conn,"SELECT * FROM users WHERE username='$username'");
+
+if(mysqli_num_rows($cek) > 0){
+    echo "<script>alert('Username sudah digunakan!');window.history.back();</script>";
+    exit;
+}
+
+/* INSERT DATA */
+
+$query = mysqli_query($conn,"INSERT INTO users (nama,username,password,role)
 VALUES('$nama','$username','$password','$role')");
 
-header("Location: users.php");
+if($query){
+    echo "<script>
+            alert('User berhasil ditambahkan!');
+            window.location='users.php';
+          </script>";
+}else{
+    echo "<script>
+            alert('Gagal menambahkan user!');
+            window.history.back();
+          </script>";
+}
 }
 ?>
 
@@ -38,7 +90,7 @@ header("Location: users.php");
             <li><i class="fa-solid fa-chart-line"></i><a href="dashboard.php">Dashboard</a></li>
             <li><i class="fa-solid fa-users"></i><a href="users.php">Users</a></li>
             <li><i class="fa-solid fa-hospital-user"></i><a href="patients.php">Patients</a></li>
-            <li><i class="fa-solid fa-hospital-user"></i><a href="services.php">Layanan</a></li>
+            <li><i class="fa-solid fa-notes-medical"></i><a href="services.php">Layanan Rumah Sakit</a></li>
             <li><i class="fa-solid fa-stethoscope"></i> <a href="doctor_services.php">Layanan Dokter</a></li>
             <li><i class="fa-solid fa-right-from-bracket"></i><a href="../logout.php">Logout</a></li>
         </ul>

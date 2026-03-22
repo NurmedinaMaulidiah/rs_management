@@ -3,34 +3,52 @@ session_start();
 require 'config/koneksi.php';
 
 if(isset($_POST['login'])){
-    $user = $_POST['user']; // username input
+    $user = $_POST['user'];
     $password = $_POST['password'];
 
-    // Query user dari database baru
     $query = mysqli_query($conn, "SELECT * FROM users WHERE username='$user'");
     $data = mysqli_fetch_assoc($query);
 
     if($data){
-        // Password sementara masih plain text '123', nanti bisa hash
+
         if($password == $data['password']){
+
             $_SESSION['user_id'] = $data['id'];
             $_SESSION['nama'] = $data['nama'];
             $_SESSION['role'] = $data['role'];
 
+            echo "<script>
+                    alert('Selamat datang, ".$data['nama']."!');
+                  </script>";
+
             // Redirect sesuai role
-            if($data['role'] == "admin") header("Location: admin/dashboard.php");
-            elseif($data['role'] == "staff") header("Location: staff/dashboard.php");
-            elseif($data['role'] == "dokter") header("Location: doctor/patients.php");
-            exit;
+            if($data['role'] == "admin"){
+                echo "<script>window.location='admin/dashboard.php'</script>";
+            }
+            elseif($data['role'] == "staff"){
+                echo "<script>window.location='staff/dashboard.php'</script>";
+            }
+            elseif($data['role'] == "dokter"){
+                echo "<script>window.location='doctor/patients.php'</script>";
+            }
+
         } else {
-            $error = "Username atau Password salah!";
+
+            echo "<script>
+                    alert('Username atau Password salah!');
+                    window.location='login.php';
+                  </script>";
         }
+
     } else {
-        $error = "Username tidak terdaftar!";
+
+        echo "<script>
+                alert('Username & Password Tidak Terdaftar, Silahkan Registrasi!');
+                window.location='login.php';
+              </script>";
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>

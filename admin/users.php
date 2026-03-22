@@ -5,7 +5,25 @@ session_start();
 require '../config/koneksi.php';
 
 $result = mysqli_query($conn,"SELECT * FROM users");
+
+
+// searching
+$search = trim($_GET['search'] ?? '');
+
+$query = "SELECT * FROM users";
+
+if($search != ''){
+    $query .= " WHERE nama LIKE '%$search%' 
+                OR username LIKE '%$search%'";
+}
+$result = mysqli_query($conn,$query);
+
+if(mysqli_num_rows($result) == 0){
+    echo "<script>alert('User tidak ditemukan!');</script>";
+}
+$result = mysqli_query($conn,$query);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +47,7 @@ $result = mysqli_query($conn,"SELECT * FROM users");
             <li><i class="fa-solid fa-chart-line"></i><a href="dashboard.php">Dashboard</a></li>
             <li><i class="fa-solid fa-users"></i><a href="users.php">Users</a></li>
             <li><i class="fa-solid fa-hospital-user"></i><a href="patients.php">Patients</a></li>
-            <li><i class="fa-solid fa-hospital-user"></i><a href="patients.php">Layanan</a></li>
+            <li><i class="fa-solid fa-notes-medical"></i><a href="patients.php">Layanan Rumah Sakit</a></li>
             <li><i class="fa-solid fa-stethoscope"></i> <a href="doctor_services.php">Layanan Dokter</a></li>
             <li><i class="fa-solid fa-right-from-bracket"></i><a href="../logout.php">Logout</a></li>
         </ul>
@@ -48,6 +66,22 @@ $result = mysqli_query($conn,"SELECT * FROM users");
         </div>
 
 
+        <!-- Tambah User -->
+<div class="user-header">
+<form method="GET" class="search-box">
+    <input type="text" name="search" placeholder="Cari nama user...">
+    <button type="submit">
+        <i class="fa-solid fa-magnifying-glass"></i> Search
+    </button>
+</form>
+
+<a href="tambah_user.php" class="btn-add">
+    <i class="fa-solid fa-plus"></i> Tambah User
+</a>
+
+</div>
+
+        
 <!-- table user -->
 <div class = "user" >
     <table border='5'>
@@ -74,9 +108,15 @@ $result = mysqli_query($conn,"SELECT * FROM users");
         <td><?= $row['username'] ?></td>
         <td><?= $row['role'] ?></td>
         <td>
-        <a href="edit_user.php?id=<?= $row['id'] ?>">Edit</a> |
-        <a href="hapus_user.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin hapus user?')">Delete</a> |
-        <a href="tambah_user.php">Tambah User</a>
+
+        <a class="btn-edit" href="edit_user.php?id=<?= $row['id'] ?>">
+        <i class="fa-solid fa-pen"></i> Edit
+        </a>
+
+        <a class="btn-delete" href="hapus_user.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin hapus user?')">
+        <i class="fa-solid fa-trash"></i> Delete
+        </a>
+
         </td>
         </tr>
 
