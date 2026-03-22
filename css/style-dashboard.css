@@ -348,6 +348,31 @@ tr:nth-child(even){
     margin:8px 0; */
 }
 
+.formInput input,
+.formInput select,
+.formInput textarea{
+    width:100%;
+    padding:10px;
+    margin-top:6px;
+    margin-bottom:12px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:14px;
+    box-sizing:border-box;
+}
+
+.formInput input[type="date"]{
+    height:40px;
+}
+
+/* text area alamat */
+.formInput textarea{
+    min-height:80px;
+    resize:vertical;
+
+}
+
+
 .formInput button{
     width:100%;
     padding:10px;
