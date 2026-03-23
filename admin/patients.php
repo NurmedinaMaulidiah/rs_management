@@ -20,7 +20,7 @@ if($search != ''){
 $result = mysqli_query($conn,$query);
 
 if(mysqli_num_rows($result) == 0){
-    echo "<script>alert('User tidak ditemukan!');</script>";
+    echo "<script>alert('Pasien tidak ditemukan!');</script>";
 }
 $result = mysqli_query($conn,$query);
 ?>
@@ -118,7 +118,7 @@ $result = mysqli_query($conn,$query);
         <i class="fa-solid fa-pen"></i> Edit
         </a>
 
-        <a class="btn-delete" href="patients_delete.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin hapus user?')">
+        <a class="btn-delete" href="patients_delete.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin hapus Pasien?')">
         <i class="fa-solid fa-trash"></i> Delete
         </a>
 

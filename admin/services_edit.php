@@ -1,4 +1,5 @@
 <?php
+session_start();
 require '../config/koneksi.php';
 
 $id = $_GET['id'];
@@ -6,14 +7,96 @@ $service = mysqli_query($conn, "SELECT * FROM services WHERE id=$id");
 $s = mysqli_fetch_assoc($service);
 
 if(isset($_POST['submit'])){
-    $nama = $_POST['nama_layanan'];
-    mysqli_query($conn, "UPDATE services SET nama_layanan='$nama' WHERE id=$id");
-    header("Location: services.php");
+    $nama = trim($_POST['nama_layanan']);
+
+    // VALIDASI
+    if($nama == ""){
+        echo "<script>
+                alert('Nama layanan harus diisi!');
+                window.history.back();
+              </script>";
+        exit;
+    }
+
+    // UPDATE DATA
+    $query = mysqli_query($conn, "UPDATE services SET nama_layanan='$nama' WHERE id=$id");
+
+    if($query){
+        echo "<script>
+                alert('Layanan berhasil diupdate!');
+                window.location='services.php';
+              </script>";
+    }else{
+        echo "<script>
+                alert('Gagal mengupdate layanan!');
+                window.history.back();
+              </script>";
+    }
 }
 ?>
 
-<h2>Edit Layanan RS</h2>
-<form method="post">
-    Nama Layanan: <input type="text" name="nama_layanan" value="<?= $s['nama_layanan'] ?>" required><br><br>
-    <input type="submit" name="submit" value="Update Layanan">
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Data Layanan</title>
+    <link rel="stylesheet" href="../css/style-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="dashboard">
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2 class="logo">Healyn</h2>
+            <span class="close-btn" onclick="closeSidebar()">✖</span>
+        </div>
+        <ul>
+            <li><i class="fa-solid fa-chart-line"></i><a href="dashboard.php">Dashboard</a></li>
+            <li><i class="fa-solid fa-users"></i><a href="users.php">Users</a></li>
+            <li><i class="fa-solid fa-hospital-user"></i><a href="patients.php">Patients</a></li>
+            <li><i class="fa-solid fa-notes-medical"></i><a href="services.php">Layanan Rumah Sakit</a></li>
+            <li><i class="fa-solid fa-stethoscope"></i> <a href="doctor_services.php">Layanan Dokter</a></li>
+            <li><i class="fa-solid fa-right-from-bracket"></i><a href="../logout.php">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="mainPatients" id="main">
+        <!-- TOPBAR -->
+        <div class="topbarPatients">
+            <span class="toggle-btn" onclick="openSidebar()">☰</span>
+            <h3>Dashboard Admin</h3>
+            <div class="admin">
+                <i class="fa-solid fa-user"></i>
+                <?= $_SESSION['nama']; ?>
+            </div>
+        </div>
+
+
+<div class="boxTambahUser">
+    <div class="formInput">
+
+        <h2>Edit Layanan Rumah Sakit</h2>
+
+        <form method="POST">
+
+            <label>Nama Layanan</label>
+            <input 
+                type="text" 
+                name="nama_layanan" 
+                value="<?= $s['nama_layanan'] ?>" 
+                placeholder="Nama Layanan"
+            >
+
+            <button type="submit" name="submit">
+                Update Layanan
+            </button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

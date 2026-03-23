@@ -412,4 +412,14 @@ tr:nth-child(even){
     margin-left: -15px; /* geser sesuai lebar sidebar */
 }
 
+/* SERVICES */
+.checkbox-group{
+    margin-top:10px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
 
+.checkbox-item{
+    font-weight:normal;
+}

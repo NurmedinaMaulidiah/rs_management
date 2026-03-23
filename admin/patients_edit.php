@@ -86,9 +86,9 @@ if(isset($_POST['submit'])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Data Pasien</title>
     <link rel="stylesheet" href="../css/style-dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
-<body>
 <body>
 <div class="dashboard">
     <!-- SIDEBAR -->
@@ -119,6 +119,7 @@ if(isset($_POST['submit'])){
             </div>
         </div>
 
+        <!-- nama classnya sama semua kaya input user -->
         <div class="boxTambahUser">
         <div class="formInput">
 
