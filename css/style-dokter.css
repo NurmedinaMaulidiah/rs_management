@@ -300,4 +300,31 @@ tr:nth-child(even){
 .checkbox-item{
     font-weight:normal;
 } */
+/* detail pasien */
+.detailPasien {
+    background-color: #FFFFFF; /* putih supaya kontras dengan background utama */
+    padding: 20px 25px;
+    border-radius: 12px; /* sudut melengkung */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* efek shadow lembut */
+    margin-bottom: 30px; /* jarak ke tabel rekam medis */
+    border-left: 5px solid #5B65DC; /* aksen warna tema */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
+.detailPasien:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.detailPasien h2 {
+    color: #122056; /* warna utama tema */
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.detailPasien p {
+    color: #333333; /* warna teks netral */
+    margin: 4px 0;
+    font-weight: 400;
+    font-size: 16px;
+}
