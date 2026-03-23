@@ -1,20 +1,20 @@
 <?php
 require '../config/koneksi.php';
 
-$id = $_GET['id'];
-mysqli_query($conn, "DELETE FROM services WHERE id=$id");
-header("Location: services.php");
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+// jalankan query delete
+$query = mysqli_query($conn, "DELETE FROM services WHERE id=$id");
 
 if($query){
     echo "<script>
-            alert('User berhasil dihapus!');
-            window.location='patients.php';
+            alert('Layanan berhasil dihapus!');
+            window.location='services.php';
           </script>";
 }else{
     echo "<script>
-            alert('Gagal menghapus user!');
-            window.location='patients.php';
+            alert('Gagal menghapus layanan!');
+            window.location='services.php';
           </script>";
 }
-?>
 ?>

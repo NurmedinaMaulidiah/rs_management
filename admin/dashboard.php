@@ -20,6 +20,10 @@ $totalStaff = mysqli_fetch_assoc($totalStaffQuery)['total'];
 // Total dokter
 $totalDoctorQuery = mysqli_query($conn, "SELECT COUNT(*) as total FROM users WHERE role='dokter'");
 $totalDoctor = mysqli_fetch_assoc($totalDoctorQuery)['total'];
+
+// Total pasien
+$totalPatientsQuery = mysqli_query($conn, "SELECT COUNT(*) as total FROM patients");
+$totalPatients = mysqli_fetch_assoc($totalPatientsQuery)['total'];
 ?>
 
 <!DOCTYPE html>
@@ -74,7 +78,7 @@ $totalDoctor = mysqli_fetch_assoc($totalDoctorQuery)['total'];
 
             <div class="card">
                 <h4>Total Patients</h4>
-                <p>40</p>
+                <p><?= $totalPatients ?></p>
             </div>
 
             <div class="card">

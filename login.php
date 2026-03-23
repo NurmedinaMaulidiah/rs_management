@@ -26,7 +26,7 @@ if(isset($_POST['login'])){
                 echo "<script>window.location='admin/dashboard.php'</script>";
             }
             elseif($data['role'] == "staff"){
-                echo "<script>window.location='staff/dashboard.php'</script>";
+                echo "<script>window.location='staff/patients.php'</script>";
             }
             elseif($data['role'] == "dokter"){
                 echo "<script>window.location='doctor/patients.php'</script>";

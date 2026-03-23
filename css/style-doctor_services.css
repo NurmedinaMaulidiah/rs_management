@@ -7,6 +7,12 @@
     --accent  : #FF5A7A;
     --textGelap : #2A2A2A;
   }
+
+
+/* BOX FORM */
+.boxTambahServices{
+    width: 450px;            /* bisa diubah sesuai kebutuhan */
+}
 /* BOX FORM */
 .boxTambahServices{
     margin: 30px;
@@ -15,14 +21,19 @@
     align-items: center;     /* vertical center */
     min-height: 100vh;       /* full height viewport */
     padding: 20px;
+    margin-left: 300px;
+
 }
 
 .formInputServices{
-    background:white;
+    background:var(--white);
     padding:25px;
     border-radius:10px;
     width:450px; /* bisa diubah sesuai kebutuhan */
     box-shadow:0 4px 10px rgba(0,0,0,0.05);
+    align-items: center;
+    justify-content: center;
+    
 }
 
 .formInputServices h2{
@@ -89,4 +100,9 @@
 
 .formInputServices button:hover{
     background:#4a52c7;
+}
+
+/* tabel */
+.doctor_services{
+    margin-left: 20px;
 }

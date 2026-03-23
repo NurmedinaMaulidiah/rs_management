@@ -5,7 +5,7 @@ require '../config/koneksi.php';
 $search = trim($_GET['search'] ?? '');
 
 $query = "
-SELECT ds.id, u.nama AS dokter, 
+SELECT ds.dokter_id, u.nama AS dokter,
 GROUP_CONCAT(s.nama_layanan SEPARATOR ', ') AS layanan
 FROM doctor_services ds
 JOIN users u ON ds.dokter_id = u.id
@@ -17,10 +17,17 @@ if($search != ''){
                 OR s.nama_layanan LIKE '%$search%'";
 }
 
-$query .= " GROUP BY ds.dokter_id
-            ORDER BY u.nama";
+$query .= "
+GROUP BY ds.dokter_id
+ORDER BY u.nama
+";
 
 $result = mysqli_query($conn,$query);
+
+// cek jika data kosong
+if(mysqli_num_rows($result) == 0){
+    echo "<script>alert('Layanan dokter tidak ditemukan!');</script>";
+}
 ?>
 
 <!DOCTYPE html>
@@ -31,6 +38,7 @@ $result = mysqli_query($conn,$query);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard List Layanan Dokter Admin - Healyn</title>
     <link rel="stylesheet" href="../css/style-dashboard.css">
+    <link rel="stylesheet" href="../css/style-doctor_services.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
@@ -80,7 +88,7 @@ $result = mysqli_query($conn,$query);
 
 
 <!-- table layanan dookter -->
-<div class = "user" >
+<div class = "doctor_services" >
     <table border='5'>
     <tr>
         <th colspan='5'>Daftar Layanan Dokter</th>
@@ -104,11 +112,13 @@ $result = mysqli_query($conn,$query);
         <td><?= $row['layanan'] ?></td>
         <td>
 
-        <a class="btn-edit" href="doctor_services_edit.php?id=<?= $row['id'] ?>">
+        <a class="btn-edit" href="doctor_services_edit.php?dokter_id=<?= $row['dokter_id'] ?>">
         <i class="fa-solid fa-pen"></i> Edit
         </a>
 
-        <a class="btn-delete" href="doctor_services_delete.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin hapus user?')">
+        <a class="btn-delete" 
+        href="doctor_services_delete.php?dokter_id=<?= $row['dokter_id'] ?>" 
+        onclick="return confirm('Yakin ingin hapus semua layanan dokter?')">
         <i class="fa-solid fa-trash"></i> Delete
         </a>
 

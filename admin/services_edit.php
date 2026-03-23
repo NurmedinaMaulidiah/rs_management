@@ -9,10 +9,23 @@ $s = mysqli_fetch_assoc($service);
 if(isset($_POST['submit'])){
     $nama = trim($_POST['nama_layanan']);
 
-    // VALIDASI
+    // VALIDASI KOSONG
     if($nama == ""){
         echo "<script>
                 alert('Nama layanan harus diisi!');
+                window.history.back();
+              </script>";
+        exit;
+    }
+
+    // CEK DUPLIKAT LAYANAN (kecuali id yang sedang diedit)
+    $cek = mysqli_query($conn, "SELECT * FROM services 
+                                WHERE nama_layanan='$nama' 
+                                AND id != $id");
+
+    if(mysqli_num_rows($cek) > 0){
+        echo "<script>
+                alert('Layanan sudah ada!');
                 window.history.back();
               </script>";
         exit;
@@ -98,5 +111,19 @@ if(isset($_POST['submit'])){
         </form>
     </div>
 </div>
+
+<script>
+const sidebar = document.getElementById('sidebar');
+const toggleBtn = document.querySelector('.toggle-btn');
+const closeBtn = document.querySelector('.close-btn');
+
+toggleBtn.addEventListener('click', () => {
+    sidebar.classList.add('open');
+});
+
+closeBtn.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+});
+</script>
 </body>
 </html>

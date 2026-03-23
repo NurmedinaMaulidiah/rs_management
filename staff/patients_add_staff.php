@@ -1,71 +1,196 @@
 <?php
+session_start();
 require '../config/koneksi.php';
 
 // Ambil semua layanan
 $services_result = mysqli_query($conn, "SELECT * FROM services");
 
-// Simpan pasien jika submit
 if(isset($_POST['submit'])){
-    $nama = $_POST['nama_pasien'];
+
+    $nama = trim($_POST['nama_pasien']);
     $jk = $_POST['jenis_kelamin'];
     $tgl = $_POST['tanggal_lahir'];
-    $alamat = $_POST['alamat'];
+    $alamat = trim($_POST['alamat']);
     $service_id = $_POST['service_id'];
     $dokter_id = $_POST['dokter_id'];
 
-    mysqli_query($conn, "INSERT INTO patients (nama_pasien, jenis_kelamin, tanggal_lahir, alamat, dokter_id, service_id)
-    VALUES ('$nama','$jk','$tgl','$alamat','$dokter_id','$service_id')");
+    /* VALIDASI */
+    if(
+        $nama == "" ||
+        $jk == "" ||
+        $tgl == "" ||
+        $alamat == "" ||
+        $service_id == "" ||
+        $dokter_id == ""
+    ){
+        echo "<script>
+                alert('Semua data harus diisi!');
+                window.history.back();
+              </script>";
+        exit;
+    }
 
-    header("Location: patients.php");
-    exit;
+    // nama hanya huruf
+    if(!preg_match("/^[a-zA-Z ]*$/",$nama)){
+        echo "<script>
+                alert('Nama pasien hanya boleh huruf!');
+                window.history.back();
+              </script>";
+        exit;
+    }
+
+    // tanggal lahir tidak boleh lebih dari hari ini
+    if($tgl > date("Y-m-d")){
+        echo "<script>
+                alert('Tanggal lahir tidak valid!');
+                window.history.back();
+              </script>";
+        exit;
+    }
+
+    /* INSERT DATA */
+
+    $query = mysqli_query($conn,"INSERT INTO patients 
+        (nama_pasien, jenis_kelamin, tanggal_lahir, alamat, dokter_id, service_id)
+        VALUES 
+        ('$nama','$jk','$tgl','$alamat','$dokter_id','$service_id')");
+
+    if($query){
+        echo "<script>
+                alert('Pasien berhasil ditambahkan!');
+                window.location='patients.php';
+              </script>";
+    }else{
+        echo "<script>
+                alert('Gagal menambahkan pasien!');
+                window.history.back();
+              </script>";
+    }
+
 }
 ?>
 
-<form method="post">
-    Nama Pasien: <input type="text" name="nama_pasien" required><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Pasien - Staff</title>
+    <link rel="stylesheet" href="../css/style-staff.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
 
-    Jenis Kelamin:
-    <select name="jenis_kelamin" required>
-        <option value="L">Laki-laki</option>
-        <option value="P">Perempuan</option>
-    </select><br>
 
-    Tanggal Lahir: <input type="date" name="tanggal_lahir" required><br>
+<body>
 
-    Alamat: <textarea name="alamat" required></textarea><br>
+    <!-- MAIN CONTENT -->
+    <div class="mainPatients" id="main">
+        <!-- TOPBAR -->
+        <div class="topbarPatients">
+        <h3>
+            <a href="patients.php" style="margin-right:10px;">
+            <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            Dashboard Staff
+        </h3>
+            <div class="admin">
+                <i class="fa-solid fa-user"></i>
+                <?= $_SESSION['nama']; ?>
+            </div>
+        </div>
 
-    Layanan RS:
-    <select id="service_id" name="service_id" required>
-        <option value="">--Pilih Layanan--</option>
-        <?php while($s = mysqli_fetch_assoc($services_result)){ ?>
-            <option value="<?= $s['id'] ?>"><?= $s['nama_layanan'] ?></option>
-        <?php } ?>
-    </select><br>
+    <div class ="boxTambahUser">
+        <div class="formInput">
+        <h2>Tambah Pasien Baru</h2>
+        <form method="POST">
 
-    Dokter:
-    <select id="dokter_id" name="dokter_id" required>
-        <option value="">--Pilih Dokter--</option>
-    </select><br><br>
+            <label>Nama Pasien</label>
+            <input type="text" name="nama_pasien" placeholder="Nama Pasien">
 
-    <input type="submit" name="submit" value="Tambah Pasien">
-</form>
+            <label>Jenis Kelamin</label>
+            <select name="jenis_kelamin">
+            <option value="">--Pilih--</option>
+            <option value="L">Laki-laki</option>
+            <option value="P">Perempuan</option>
+            </select>
 
-<!-- JQuery AJAX -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
+            <label>Tanggal Lahir</label>
+            <input type="date" name="tanggal_lahir">
+
+            <label>Alamat</label>
+            <textarea name="alamat" placeholder="Alamat Pasien"></textarea>
+
+            <label>Layanan RS</label>
+            <select id="service_id" name="service_id">
+
+            <option value="">--Pilih Layanan--</option>
+
+            <?php
+            while($s = mysqli_fetch_assoc($services_result)){
+            ?>
+
+            <option value="<?= $s['id'] ?>">
+            <?= $s['nama_layanan'] ?>
+            </option>
+
+            <?php } ?>
+
+            </select>
+
+            <label>Dokter</label>
+            <select id="dokter_id" name="dokter_id">
+            <option value="">--Pilih Dokter--</option>
+            </select>
+
+            <button type="submit" name="submit">Simpan</button>
+
+        </form>
+        </div>
+
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
 $('#service_id').change(function(){
+
     var service_id = $(this).val();
+
     if(service_id){
-        $.get('get_doctors.php', {service_id: service_id}, function(data){
-            var doctors = JSON.parse(data);
-            var options = '<option value="">--Pilih Dokter--</option>';
-            doctors.forEach(function(d){
-                options += '<option value="'+d.id+'">'+d.nama+'</option>';
-            });
-            $('#dokter_id').html(options);
+
+        $.ajax({
+            url:'get_doctors_staff.php',
+            type:'GET',
+            data:{service_id:service_id},
+
+            success:function(data){
+
+                var doctors = JSON.parse(data);
+
+                var html = '<option value="">--Pilih Dokter--</option>';
+
+                doctors.forEach(function(d){
+                    html += '<option value="'+d.id+'">'+d.nama+'</option>';
+                });
+
+                $('#dokter_id').html(html);
+            }
+
         });
-    } else {
+
+    }else{
+
         $('#dokter_id').html('<option value="">--Pilih Dokter--</option>');
+
     }
+
 });
+
 </script>
+
+</body>
+</html>

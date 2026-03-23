@@ -1,28 +1,26 @@
-<!-- ini halaman list pasien -->
 <?php
 session_start();
 require '../config/koneksi.php';
 
-// ambil semua pasien dengan nama dokter & layanan
-$sql = "SELECT p.*, u.nama AS dokter, s.nama_layanan 
-        FROM patients p
-        JOIN users u ON p.dokter_id = u.id
-        JOIN services s ON p.service_id = s.id";
-
 // searching
 $search = trim($_GET['search'] ?? '');
 
-$query = "SELECT * FROM patients";
+// query ambil pasien + nama dokter
+$query = "SELECT p.*, u.nama AS dokter, s.nama_layanan
+          FROM patients p
+          JOIN users u ON p.dokter_id = u.id
+          JOIN services s ON p.service_id = s.id";
 
 if($search != ''){
-    $query .= " WHERE nama_pasien LIKE '%$search%'";
+    $query .= " WHERE p.nama_pasien LIKE '%$search%'";
 }
+
 $result = mysqli_query($conn,$query);
 
+// cek jika data kosong
 if(mysqli_num_rows($result) == 0){
     echo "<script>alert('Pasien tidak ditemukan!');</script>";
 }
-$result = mysqli_query($conn,$query);
 ?>
 
 <!DOCTYPE html>
@@ -111,7 +109,7 @@ $result = mysqli_query($conn,$query);
         <td><?= $row['jenis_kelamin'] ?></td>
         <td><?= $row['tanggal_lahir'] ?></td>
         <td><?= $row['alamat'] ?></td>
-        <td><?= $row['dokter_id'] ?></td>
+        <td><?= $row['dokter'] ?></td>
         <td>
 
         <a class="btn-edit" href="patients_edit.php?id=<?= $row['id'] ?>">
