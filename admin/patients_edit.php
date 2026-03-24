@@ -148,19 +148,9 @@ if(isset($_POST['submit'])){
             <label>Alamat</label>
             <textarea name="alamat" placeholder="Alamat Pasien"><?= $p['alamat'] ?></textarea>
 
-            <label>Dokter</label>
-            <select name="dokter_id">
-            <option value="">--Pilih Dokter--</option>
-
-            <?php while($d = mysqli_fetch_assoc($doctors)){ ?>
-            <option value="<?= $d['id'] ?>" <?= $p['dokter_id']==$d['id']?'selected':'' ?>>
-            <?= $d['nama'] ?>
-            </option>
-            <?php } ?>
-            </select>
-
             <label>Layanan RS</label>
-            <select name="service_id">
+            <!-- <select name="service_id"> -->
+            <select id="service_id" name="service_id">
             <option value="">--Pilih Layanan--</option>
 
             <?php while($s = mysqli_fetch_assoc($services)){ ?>
@@ -170,6 +160,19 @@ if(isset($_POST['submit'])){
             <?php } ?>
 
             </select>
+            
+            <label>Dokter</label>
+            <!-- <select name="dokter_id"> -->
+            <select id="dokter_id" name="dokter_id">
+            <option value="">--Pilih Dokter--</option>
+
+            <?php while($d = mysqli_fetch_assoc($doctors)){ ?>
+            <option value="<?= $d['id'] ?>" <?= $p['dokter_id']==$d['id']?'selected':'' ?>>
+            <?= $d['nama'] ?>
+            </option>
+            <?php } ?>
+            </select>
+
             <button type="submit" name="submit">Update Pasien</button>
 
         </form>
@@ -194,6 +197,51 @@ if(isset($_POST['submit'])){
             </script>
 
         
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+function loadDoctors(service_id, selected_dokter = null){
+
+    if(service_id){
+
+        $.ajax({
+            url:'get_doctors.php',
+            type:'GET',
+            data:{service_id:service_id},
+
+            success:function(data){
+
+                var doctors = JSON.parse(data);
+                var html = '<option value="">--Pilih Dokter--</option>';
+
+                doctors.forEach(function(d){
+                    if(selected_dokter == d.id){
+                        html += '<option value="'+d.id+'" selected>'+d.nama+'</option>';
+                    }else{
+                        html += '<option value="'+d.id+'">'+d.nama+'</option>';
+                    }
+                });
+
+                $('#dokter_id').html(html);
+            }
+        });
+
+    }
+}
+
+// saat layanan diganti
+$('#service_id').change(function(){
+    loadDoctors($(this).val());
+});
+
+// saat pertama kali load (edit mode)
+$(document).ready(function(){
+    var service_id = $('#service_id').val();
+    var dokter_id = "<?= $p['dokter_id'] ?>";
+
+    loadDoctors(service_id, dokter_id);
+});
+</script>
 </body>
 </html>
 

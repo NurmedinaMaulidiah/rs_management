@@ -9,7 +9,6 @@ if($_SESSION['role'] !== 'dokter'){
 
 $doctor_id = $_SESSION['user_id'];
 $patient_id = $_GET['id'] ?? 0;
-$search = trim($_GET['search'] ?? '');
 
 // Pastikan pasien milik dokter
 $sql = "SELECT p.*, s.nama_layanan
@@ -24,70 +23,98 @@ if(!$patient){
     exit;
 }
 
-// Ambil rekam medis pasien dengan search
-$medicals_query = "SELECT * FROM medical_records WHERE patient_id = $patient_id";
+// Ambil rekam medis pasien
+$medicals = mysqli_query($conn, "SELECT * FROM medical_records WHERE patient_id = $patient_id ORDER BY created_at DESC");
 
-if($search != ''){
-    $search_esc = mysqli_real_escape_string($conn, $search);
-    $medicals_query .= " AND (keluhan LIKE '%$search_esc%' OR diagnosa LIKE '%$search_esc%' OR tindakan LIKE '%$search_esc%')";
-}
+// Tambah rekam medis
+// if(isset($_POST['add_medical'])){
+//     $keluhan = mysqli_real_escape_string($conn, $_POST['keluhan']);
+//     $diagnosa = mysqli_real_escape_string($conn, $_POST['diagnosa']);
+//     $tindakan = mysqli_real_escape_string($conn, $_POST['tindakan']);
 
-$medicals_query .= " ORDER BY created_at DESC";
-$medicals = mysqli_query($conn, $medicals_query);
+//     mysqli_query($conn, "INSERT INTO medical_records (patient_id, keluhan, diagnosa, tindakan)
+//     VALUES ('$patient_id','$keluhan','$diagnosa','$tindakan')");
 
+//     header("Location: patient_detail.php?id=$patient_id");
+//     exit;
+// }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Detail Pasien - Dokter</title>
-<link rel="stylesheet" href="../css/style-dokter.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Pasien - Dokter Healyn</title>
+    <link rel="stylesheet" href="../css/style-dokter.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    
 <div class="topbarPatients">
-<h3 class="page-title">Dashboard Dokter</h3>
+<h3>
+            <a href="patients.php" style="margin-right:10px;">
+            <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            Dashboard Staff
+</h3>
 
+<!-- kanan -->
 <div class="topbar-right">
+
     <div class="admin">
         <i class="fa-solid fa-user"></i>
         <?= $_SESSION['nama']; ?>
     </div>
-    <a href="../logout.php" class="btn-logout" onclick="return confirm('Yakin ingin logout?')">
-        <i class="fa-solid fa-right-from-bracket"></i>
+
+    <a href="../logout.php" class="btn-logout"
+    onclick="return confirm('Yakin ingin logout?')">
+    <i class="fa-solid fa-right-from-bracket"></i>
     </a>
 </div>
 </div>
 
-<!-- tambah rekam medis -->
+<!-- Tambah Rekam Medis -->
 <div class="user-header">
-    <form method="GET" class="search-add-container">
-        <input type="hidden" name="id" value="<?= $patient_id ?>">
-        <input type="text" name="search" placeholder="Cari Rekam Medis..." value="<?= htmlspecialchars($search) ?>" class="search-input">
-        <button type="submit" class="btn-search">
-            <i class="fa-solid fa-magnifying-glass"></i> Cari
-        </button>
-        <a href="medical_add.php" class="btn-add">
-            <i class="fa-solid fa-plus"></i> Tambah Rekam Medis
-        </a>
-    </form>
+<a href="medical_add.php?patient_id=<?= $patient_id ?>" class="btn-add"> <!-- jgn lupa ambil id biar bisa -->
+    <i class="fa-solid fa-plus"></i> Tambah Rekam Medis
+</a>
 </div>
 
-<div class ="detailPasien">
-    <h2>Detail Pasien</h2>
-    <p>Nama: <?= $patient['nama_pasien'] ?></p>
-    <p>Layanan: <?= $patient['nama_layanan'] ?></p>
+<!-- Detail -->
+<div class="detailPasien">
+<table class="detailTable">
+    <tr>
+        <th colspan="4">
+            <i class="fa-solid fa-user"></i> Detail Pasien
+        </th>
+    </tr>
+
+    <tr>
+        <td><strong>Nama</strong></td>
+        <td><?= htmlspecialchars($patient['nama_pasien']) ?></td>
+
+        <td><strong>Layanan</strong></td>
+        <td><?= htmlspecialchars($patient['nama_layanan']) ?></td>
+    </tr>
+
+    <tr>
+        <td><strong>Jenis Kelamin</strong></td>
+        <td><?= ($patient['jenis_kelamin'] === 'L') ? 'Pria' : 'Wanita' ?></td>
+
+        <td><strong>Tanggal Lahir</strong></td>
+        <td><?= date('d-m-Y', strtotime($patient['tanggal_lahir'])) ?></td>
+    </tr>
+</table>
 </div>
 
-<!-- Table Rekam Medis -->
+<!-- table user -->
+<!-- table rekam medis -->
 <div class="user">
-    <table border='5'>
+    <table border="1">
         <tr>
-            <th colspan='6'>Daftar Rekam Medis Pasien</th>
+            <th colspan="6">Rekam Medis Pasien</th>
         </tr>
         <tr>
             <th>No</th>
@@ -97,6 +124,7 @@ $medicals = mysqli_query($conn, $medicals_query);
             <th>Tindakan</th>
             <th>Aksi</th>
         </tr>
+
         <?php
         $no = 1;
         while($m = mysqli_fetch_assoc($medicals)){
@@ -107,14 +135,27 @@ $medicals = mysqli_query($conn, $medicals_query);
             <td><?= $m['keluhan'] ?></td>
             <td><?= $m['diagnosa'] ?></td>
             <td><?= $m['tindakan'] ?></td>
+
             <td>
-                <a href="medical_edit.php?id=<?= $m['id'] ?>">Edit</a> |
-                <a href="medical_delete.php?id=<?= $m['id'] ?>" onclick="return confirm('Yakin hapus rekam medis?')">Delete</a>
+            <a class="btn-edit" href="medical_edit.php?id=<?= $m['id']  ?>">
+            <i class="fa-solid fa-pen"></i> Edit
+            </a>
+
+            <a class="btn-delete" href="medical_delete.php?id=<?= $m['id']  ?>" onclick="return confirm('Yakin hapus rekam medis?')">
+            <i class="fa-solid fa-trash"></i> Delete
+        </a>
             </td>
         </tr>
         <?php } ?>
+
+        <?php if(mysqli_num_rows($medicals) == 0): ?>
+        <tr>
+            <td colspan="5"><em>Belum ada rekam medis untuk pasien ini.</em></td>
+        </tr>
+        <?php endif; ?>
     </table>
 </div>
+
+
 </body>
 </html>
-

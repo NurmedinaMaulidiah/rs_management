@@ -9,7 +9,7 @@ $patient = mysqli_query($conn, "SELECT * FROM patients WHERE id=$id");
 $p = mysqli_fetch_assoc($patient);
 
 // ambil daftar dokter & layanan
-$doctors = mysqli_query($conn, "SELECT id, nama FROM users WHERE role='dokter'");
+// $doctors = mysqli_query($conn, "SELECT id, nama FROM users WHERE role='dokter'"); //gapake biar dokter muncul sesuai layanan aja
 $services = mysqli_query($conn, "SELECT id, nama_layanan FROM services");
 
 if(isset($_POST['submit'])){
@@ -135,19 +135,8 @@ if(isset($_POST['submit'])){
             <label>Alamat</label>
             <textarea name="alamat" placeholder="Alamat Pasien"><?= $p['alamat'] ?></textarea>
 
-            <label>Dokter</label>
-            <select name="dokter_id">
-            <option value="">--Pilih Dokter--</option>
-
-            <?php while($d = mysqli_fetch_assoc($doctors)){ ?>
-            <option value="<?= $d['id'] ?>" <?= $p['dokter_id']==$d['id']?'selected':'' ?>>
-            <?= $d['nama'] ?>
-            </option>
-            <?php } ?>
-            </select>
-
             <label>Layanan RS</label>
-            <select name="service_id">
+            <select id="service_id" name="service_id">
             <option value="">--Pilih Layanan--</option>
 
             <?php while($s = mysqli_fetch_assoc($services)){ ?>
@@ -157,12 +146,58 @@ if(isset($_POST['submit'])){
             <?php } ?>
 
             </select>
+            <label>Dokter</label>
+            <select id="dokter_id" name="dokter_id">
+            <option value="">--Pilih Dokter--</option>
+            </select>
+
+
             <button type="submit" name="submit">Update Pasien</button>
 
         </form>
 
 </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+$('#service_id').change(function(){
+
+    var service_id = $(this).val();
+
+    if(service_id){
+
+        $.ajax({
+            url:'get_doctors_staff.php',
+            type:'GET',
+            data:{service_id:service_id},
+
+            success:function(data){
+
+                var doctors = JSON.parse(data);
+
+                var html = '<option value="">--Pilih Dokter--</option>';
+
+                doctors.forEach(function(d){
+                    html += '<option value="'+d.id+'">'+d.nama+'</option>';
+                });
+
+                $('#dokter_id').html(html);
+            }
+
+        });
+
+    }else{
+
+        $('#dokter_id').html('<option value="">--Pilih Dokter--</option>');
+
+    }
+
+});
+
+</script>
 </body>
 </html>
 

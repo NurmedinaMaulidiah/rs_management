@@ -233,7 +233,7 @@ body{
     text-align:center;
 }
 
-.btn-edit{
+/* .btn-edit{
     color:#5B65DC;
     text-decoration:none;
 }
@@ -241,6 +241,42 @@ body{
 .btn-delete{
     color:red;
     text-decoration:none;
+} */
+
+.btn-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #5B65DC;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.btn-edit:hover {
+    background-color: #3b40a0;
+    transform: scale(1.05);
+}
+
+.btn-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: rgb(228, 56, 56);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.btn-delete:hover {
+    background-color: #3b40a0;
+    transform: scale(1.05);
 }
 
 /* css di halaman user (crud) */

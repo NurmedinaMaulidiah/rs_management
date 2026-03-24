@@ -2,107 +2,131 @@
 session_start();
 require '../config/koneksi.php';
 
-// Pastikan role = dokter
+// Pastikan role dokter
 if($_SESSION['role'] !== 'dokter'){
     header("Location: ../login.php");
     exit;
 }
 
 $doctor_id = $_SESSION['user_id'];
-$patient_id = $_GET['id'] ?? 0;
+$patient_id = $_GET['patient_id'] ?? 0;
 
-// Cek pasien milik dokter
+// Ambil info pasien (pastikan pasien milik dokter)
 $sql = "SELECT p.*, s.nama_layanan
         FROM patients p
         JOIN services s ON p.service_id = s.id
-        WHERE p.id = ? AND p.dokter_id = ?";
-$stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_bind_param($stmt, "ii", $patient_id, $doctor_id);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$patient = mysqli_fetch_assoc($result);
+        WHERE p.id = $patient_id AND p.dokter_id = $doctor_id";
+$res = mysqli_query($conn, $sql);
+$patient = mysqli_fetch_assoc($res);
 
 if(!$patient){
-    echo "<p style='color:red;'>Pasien tidak ditemukan atau bukan pasien Anda!</p>";
+    echo "<script>alert('Pasien tidak ditemukan atau bukan pasien Anda!'); window.location='patients.php';</script>";
     exit;
 }
 
-// Proses tambah rekam medis
-if(isset($_POST['add_medical'])){
-    $keluhan = mysqli_real_escape_string($conn, $_POST['keluhan']);
-    $diagnosa = mysqli_real_escape_string($conn, $_POST['diagnosa']);
-    $tindakan = mysqli_real_escape_string($conn, $_POST['tindakan']);
+// Proses form tambah rekam medis
+if(isset($_POST['submit'])){
+    $keluhan = trim($_POST['keluhan']);
+    $diagnosa = trim($_POST['diagnosa']);
+    $tindakan = trim($_POST['tindakan']);
 
-    $insert_sql = "INSERT INTO medical_records (patient_id, keluhan, diagnosa, tindakan) 
-                   VALUES (?, ?, ?, ?)";
-    $stmt_insert = mysqli_prepare($conn, $insert_sql);
-    mysqli_stmt_bind_param($stmt_insert, "isss", $patient_id, $keluhan, $diagnosa, $tindakan);
-    mysqli_stmt_execute($stmt_insert);
+    // Validasi
+    if($keluhan === '' || $diagnosa === '' || $tindakan === ''){
+        echo "<script>alert('Semua field harus diisi!'); window.history.back();</script>";
+        exit;
+    }
 
-    header("Location: patient_detail.php?id=$patient_id");
-    exit;
+    // Simpan ke database
+    $keluhan = mysqli_real_escape_string($conn, $keluhan);
+    $diagnosa = mysqli_real_escape_string($conn, $diagnosa);
+    $tindakan = mysqli_real_escape_string($conn, $tindakan);
+
+    $query = "INSERT INTO medical_records (patient_id, keluhan, diagnosa, tindakan)
+              VALUES ('$patient_id', '$keluhan', '$diagnosa', '$tindakan')";
+
+    if(mysqli_query($conn, $query)){
+        echo "<script>alert('Rekam medis berhasil disimpan!'); window.location='patient_detail.php?id=$patient_id';</script>";
+        exit;
+    } else {
+        echo "<script>alert('Gagal menyimpan rekam medis!'); window.history.back();</script>";
+        exit;
+    }
 }
 ?>
 
+
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Tambah Rekam Medis</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-            background-color: #f5f5f5;
-        }
-        h3 {
-            color: #122056;
-        }
-        form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 600px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        textarea {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            resize: vertical;
-        }
-        input[type="submit"] {
-            background-color: #122056;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        input[type="submit"]:hover {
-            background-color: #5B65DC;
-        }
-    </style>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Rekam Medis pasien - Dokter Healyn</title>
+    <link rel="stylesheet" href="../css/style-dokter.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    
+<div class="topbarPatients">
+<h3>
+<a href="patient_detail.php?id=<?= $patient_id ?>" style="margin-right:10px;">
+    <i class="fa-solid fa-arrow-left"></i>
+    </a>
+    Dashboard Staff
+    </h3>
 
-<h3>Tambah Rekam Medis untuk Pasien: <?= htmlspecialchars($patient['nama']) ?></h3>
+<!-- kanan -->
+<div class="topbar-right">
 
-<form method="post">
-    <label>Keluhan:</label><br>
-    <textarea name="keluhan" rows="3" required></textarea><br>
+    <div class="admin">
+        <i class="fa-solid fa-user"></i>
+        <?= $_SESSION['nama']; ?>
+    </div>
 
-    <label>Diagnosa:</label><br>
-    <textarea name="diagnosa" rows="3" required></textarea><br>
+    <a href="../logout.php" class="btn-logout"
+    onclick="return confirm('Yakin ingin logout?')">
+    <i class="fa-solid fa-right-from-bracket"></i>
+    </a>
+</div>
+</div>
 
-    <label>Tindakan:</label><br>
-    <textarea name="tindakan" rows="3" required></textarea><br>
+<div class="boxTambahUser">
+    <div class="formInput">
+        <h2>Tambah Rekam Medis Pasien</h2>
 
-    <input type="submit" name="add_medical" value="Simpan Rekam Medis">
-</form>
+        <div class="infoPasien">
+    <p>
+        <strong><i class="fa-solid fa-user"></i> Nama:</strong> 
+        <?= htmlspecialchars($patient['nama_pasien']) ?>
+    </p>
 
+    <p>
+        <strong><i class="fa-solid fa-stethoscope"></i> Layanan:</strong> 
+        <?= htmlspecialchars($patient['nama_layanan']) ?>
+    </p>
+
+    <p>
+        <strong><i class="fa-solid fa-venus-mars"></i> Gender:</strong> 
+        <?= ($patient['jenis_kelamin'] === 'L') ? 'Laki-laki' : 'Perempuan' ?>
+    </p>
+
+    <p>
+        <strong><i class="fa-solid fa-calendar-days"></i> Tanggal Lahir:</strong> 
+        <?= date('d-m-Y', strtotime($patient['tanggal_lahir'])) ?>
+    </p>
+</div>
+        <form method="POST">
+            <label><i class="fa-solid fa-notes-medical"></i> Keluhan</label> 
+            <textarea name="keluhan"></textarea><br>
+            <label><i class="fa-solid fa-stethoscope"></i>Diagnosa</label> 
+            <textarea name="diagnosa"></textarea><br>
+            <label><i class="fa-solid fa-syringe"></i>Tindakan</label> 
+            <textarea name="tindakan"></textarea><br><br>
+
+                <button type="submit" name="submit">Simpan</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

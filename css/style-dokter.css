@@ -42,10 +42,11 @@ body{
 
 /* btn searching, tambah user, edit delete */
 .user-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
+    display: flex;
+    justify-content: flex-end; /* tombol ke kanan */
+    margin-bottom: 10px;       /* jarak ke tabel */
+    padding-right: 20px;
+    padding-top: 10px;
 }
 
 .search-box input{
@@ -64,18 +65,54 @@ body{
     border-radius:5px;
 }
 
-.btn-add{
-    background:#28a745;
-    color:white;
-    padding:3px 10px;
-    text-decoration:none;
-    border-radius:5px;
-    margin-right: 10px;
-    margin-top: 10px;
+.btn-add {
+    background: #28a745;
+    color: white;
+    padding: 6px 14px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: 0.2s;
 }
 
-.btn-add:hover{
-    background:#218838;
+.btn-add:hover {
+    background: #218838;
+}
+
+.btn-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #5B65DC;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.btn-edit:hover {
+    background-color: #3b40a0;
+    transform: scale(1.05);
+}
+
+.btn-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: rgb(228, 56, 56);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.btn-delete:hover {
+    background-color: #3b40a0;
+    transform: scale(1.05);
 }
 
 .user-table{
@@ -90,14 +127,24 @@ body{
     text-align:center;
 }
 
-.btn-edit{
-    color:#5B65DC;
-    text-decoration:none;
+
+
+.btnDetail {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #5B65DC;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
 }
 
-.btn-delete{
-    color:red;
-    text-decoration:none;
+.btnDetail:hover {
+    background-color: #3b40a0;
+    transform: scale(1.05);
 }
 
 /* css di halaman user (crud) */
@@ -133,7 +180,7 @@ td , th{
 }
       
 th{
-   background-color: var(--accent);
+   background-color: var(--secondary);
    color: var(--white);
    font-family: 'Dosis', sans-serif;
    font-weight: bold;
@@ -162,7 +209,8 @@ tr:nth-child(even){
 }
 
 .formInput{
-    width:350px;
+    width: 100%;
+    max-width: 700px;
     padding:40px;
     background:var(--white);
     box-shadow:0 10px 15px rgba(0,0,0,0.1);
@@ -223,11 +271,27 @@ tr:nth-child(even){
 }
 
 /* text area alamat */
-.formInput textarea{
-    min-height:80px;
-    resize:vertical;
-
+.formInput textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f9fafc;
+    color: var(--textGelap);
+    resize: vertical; /* bisa ditarik ke bawah */
+    transition: all 0.25s ease;
 }
+
+.formInput textarea:focus {
+    border-color: var(--secondary);
+    background-color: #ffffff;
+    outline: none;
+    box-shadow: 0 0 0 3px var(--primary);
+}
+
 
 
 .formInput button{
@@ -266,6 +330,9 @@ tr:nth-child(even){
     z-index:100;
     position:sticky;
 }
+.topbarPatients h3{
+    color: var(--primary);
+}
 
 .page-title{
     color:var(--primary);
@@ -289,42 +356,44 @@ tr:nth-child(even){
     background:var(--light-blue);
 }
 
-/* SERVICES
-.checkbox-group{
-    margin-top:10px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
+/* Detail Pasien */
+/* Container detail pasien */
+.detailTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid #ddd; /* border luar */
 }
 
-.checkbox-item{
-    font-weight:normal;
-} */
-/* detail pasien */
-.detailPasien {
-    background-color: #FFFFFF; /* putih supaya kontras dengan background utama */
-    padding: 20px 25px;
-    border-radius: 12px; /* sudut melengkung */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* efek shadow lembut */
-    margin-bottom: 30px; /* jarak ke tabel rekam medis */
-    border-left: 5px solid #5B65DC; /* aksen warna tema */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.detailPasien:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-}
-
-.detailPasien h2 {
-    color: #122056; /* warna utama tema */
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.detailPasien p {
-    color: #333333; /* warna teks netral */
-    margin: 4px 0;
-    font-weight: 400;
+.detailTable th {
+    background: var(--secondary);
+    color: white;
+    padding: 12px;
     font-size: 16px;
+    text-align: left;
+    border: 1px solid #ddd; /* border luar */
+}
+
+.detailTable td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    border: 1px solid #ddd; /* border luar */
+}
+
+.detailTable tr:last-child td {
+    border-bottom: none;
+}
+
+.detailTable td strong {
+    color: var(--primary);
+}
+
+/* zebra biar enak dibaca */
+.detailTable tr:nth-child(even) {
+    background: #f9fafc;
 }

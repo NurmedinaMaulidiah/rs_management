@@ -26,31 +26,136 @@ if(!$record){
 
 // Jika form submit
 if(isset($_POST['submit'])){
-    $keluhan = mysqli_real_escape_string($conn, $_POST['keluhan']);
-    $diagnosa = mysqli_real_escape_string($conn, $_POST['diagnosa']);
-    $tindakan = mysqli_real_escape_string($conn, $_POST['tindakan']);
+    $keluhan = trim($_POST['keluhan']);
+    $diagnosa = trim($_POST['diagnosa']);
+    $tindakan = trim($_POST['tindakan']);
 
-    mysqli_query($conn, "UPDATE medical_records SET 
-        keluhan='$keluhan', 
-        diagnosa='$diagnosa', 
-        tindakan='$tindakan' 
-        WHERE id=$record_id");
+    // VALIDASI WAJIB ISI
+    if($keluhan === ''){
+        echo "<script>alert('Keluhan harus diisi!'); window.history.back();</script>";
+        exit;
+    }
 
-    header("Location: patient_detail.php?id=".$record['patient_id']);
-    exit;
+    if($diagnosa === ''){
+        echo "<script>alert('Diagnosa harus diisi!'); window.history.back();</script>";
+        exit;
+    }
+
+    if($tindakan === ''){
+        echo "<script>alert('Tindakan harus diisi!'); window.history.back();</script>";
+        exit;
+    }
+
+    // Amankan input
+    $keluhan = mysqli_real_escape_string($conn, $keluhan);
+    $diagnosa = mysqli_real_escape_string($conn, $diagnosa);
+    $tindakan = mysqli_real_escape_string($conn, $tindakan);
+
+    // Update data
+    $query = "UPDATE medical_records SET 
+                keluhan='$keluhan', 
+                diagnosa='$diagnosa', 
+                tindakan='$tindakan' 
+              WHERE id=$record_id";
+
+    if(mysqli_query($conn, $query)){
+        echo "<script>
+                alert('Rekam medis berhasil diupdate!');
+                window.location='patient_detail.php?id=".$record['patient_id']."';
+              </script>";
+        exit;
+    } else {
+        echo "<script>
+                alert('Gagal mengupdate rekam medis!');
+                window.history.back();
+              </script>";
+        exit;
+    }
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Rekam Medis - Dokter Healyn</title>
+    <link rel="stylesheet" href="../css/style-dokter.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="topbarPatients">
+<h3>
+<a href="patient_detail.php?id=<?= $patient_id ?>" style="margin-right:10px;">
+    <i class="fa-solid fa-arrow-left"></i>
+    </a>
+    Dashboard Staff
+    </h3>
 
-<h2>Edit Rekam Medis Pasien: <?= $record['nama_pasien'] ?></h2>
-<form method="post">
-    Keluhan:<br>
-    <textarea name="keluhan" required><?= $record['keluhan'] ?></textarea><br><br>
+<!-- kanan -->
+<div class="topbar-right">
 
-    Diagnosa:<br>
-    <textarea name="diagnosa" required><?= $record['diagnosa'] ?></textarea><br><br>
+    <div class="admin">
+        <i class="fa-solid fa-user"></i>
+        <?= $_SESSION['nama']; ?>
+    </div>
 
-    Tindakan:<br>
-    <textarea name="tindakan" required><?= $record['tindakan'] ?></textarea><br><br>
+    <a href="../logout.php" class="btn-logout"
+    onclick="return confirm('Yakin ingin logout?')">
+    <i class="fa-solid fa-right-from-bracket"></i>
+    </a>
+</div>
+</div>
 
-    <input type="submit" name="submit" value="Simpan Perubahan">
-</form>
+<div class="boxTambahUser">
+    <div class="formInput">
+        <!-- FORM EDIT -->
+        <form method="POST">
+
+            <label>
+                <i class="fa-solid fa-notes-medical"></i> Keluhan
+            </label>
+            <textarea name="keluhan" required><?= htmlspecialchars($record['keluhan']) ?></textarea>
+
+            <label>
+                <i class="fa-solid fa-stethoscope"></i> Diagnosa
+            </label>
+            <textarea name="diagnosa" required><?= htmlspecialchars($record['diagnosa']) ?></textarea>
+
+            <label>
+                <i class="fa-solid fa-syringe"></i> Tindakan
+            </label>
+            <textarea name="tindakan" required><?= htmlspecialchars($record['tindakan']) ?></textarea>
+
+            <!-- BUTTON -->
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                
+                <button type="submit" name="submit">
+                    <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
+                </button>
+
+                <a href="patient_detail.php?id=<?= $record['patient_id'] ?>" 
+                   class="btn-delete"
+                   style="background:#6c757d;">
+                    <i class="fa-solid fa-arrow-left"></i> Kembali
+                </a>
+
+            </div>
+
+        </form>
+    </div>
+</div>
+</body>
+</html>
+
+<!-- 
+        Kenapa pakai $record?
+        Karena halaman ini adalah EDIT REKAM MEDIS, jadi data utama yang diambil berasal dari tabel medical_records.
+        Query yang digunakan sudah JOIN ke tabel patients dan services,
+        sehingga semua data pasien (nama, jenis kelamin, dll) sudah ikut dalam $record.
+        
+        Jadi:
+        $record = gabungan data rekam medis + data pasien
+        Tidak perlu lagi pakai $patient.
+        -->

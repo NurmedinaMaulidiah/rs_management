@@ -8,26 +8,25 @@ if($_SESSION['role'] !== 'dokter'){
 }
 
 $doctor_id = $_SESSION['user_id'];
+
+// Ambil keyword pencarian (jika ada)
 $search = trim($_GET['search'] ?? '');
 
-// Mulai query dasar
-$query = "SELECT p.id, p.nama_pasien, s.nama_layanan
-          FROM patients p
-          JOIN services s ON p.service_id = s.id
-          WHERE p.dokter_id = $doctor_id";
+// Query ambil pasien dokter ini dengan filter search
+$sql = "SELECT p.id, p.nama_pasien, s.nama_layanan
+        FROM patients p
+        JOIN services s ON p.service_id = s.id
+        WHERE p.dokter_id = $doctor_id";
 
-// Tambahkan search jika ada
-if($search != ''){
-    $search = mysqli_real_escape_string($conn, $search);
-    $query .= " AND p.nama_pasien LIKE '%$search%'";
+if($search !== ''){
+    $sql .= " AND p.nama_pasien LIKE '%" . mysqli_real_escape_string($conn, $search) . "%'";
 }
 
-// Tambahkan urutan
-$query .= " ORDER BY p.nama_pasien";
+$sql .= " ORDER BY p.nama_pasien";
 
-$result = mysqli_query($conn, $query);
+$result = mysqli_query($conn, $sql);
 
-// cek jika data kosong
+// Jika pasien tidak ditemukan, tampilkan alert
 if(mysqli_num_rows($result) == 0){
     echo "<script>alert('Pasien tidak ditemukan!');</script>";
 }
@@ -39,11 +38,12 @@ if(mysqli_num_rows($result) == 0){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard List Pasien Dokter - Healyn</title>
+    <title>List Pasien - Dokter Healyn</title>
     <link rel="stylesheet" href="../css/style-dokter.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+
 
 <body>
 <div class="topbarPatients">
@@ -65,14 +65,22 @@ if(mysqli_num_rows($result) == 0){
     </a>
 
 </div>
+</div>
 
+<div class = "user-header">
+<form method="GET" class="search-box">
+    <input type="text" name="search" placeholder="Cari nama pasien...">
+    <button type="submit">
+        <i class="fa-solid fa-magnifying-glass"></i> Search
+    </button>
+</form>
 </div>
 
 <!-- table user -->
 <div class = "user" >
     <table border='5'>
     <tr>
-        <th colspan='7'>Data Pasien</th>
+        <th colspan='4'>Daftar Pasien</th>
     </tr>
 
         <tr>
@@ -92,20 +100,15 @@ if(mysqli_num_rows($result) == 0){
         <td><?= $row['nama_pasien'] ?></td>
         <td><?= $row['nama_layanan'] ?></td>
         <td>
-
-        <a class="btn-detail" href="patient_detail.php?id=<?= $row['id'] ?>"> 
-        <i class="fa-solid fa-pen"></i> Detail
-        </a>
-        </a>
-
+        <a class="btnDetail" href="patient_detail.php?id=<?= $row['id'] ?>">
+        <i class="fa-solid fa-folder-open"></i> Detail
         </td>
+
         </tr>
 
         <?php } ?>
     </table>
 </div>
     </div>
-
-
 </body>
 </html>
