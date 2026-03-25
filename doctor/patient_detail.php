@@ -153,6 +153,7 @@ $medicals = mysqli_query($conn, "SELECT * FROM medical_records WHERE patient_id 
             <td colspan="5"><em>Belum ada rekam medis untuk pasien ini.</em></td>
         </tr>
         <?php endif; ?>
+        
     </table>
 </div>
 

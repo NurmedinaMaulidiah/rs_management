@@ -27,9 +27,9 @@ $sql .= " ORDER BY p.nama_pasien";
 $result = mysqli_query($conn, $sql);
 
 // Jika pasien tidak ditemukan, tampilkan alert
-if(mysqli_num_rows($result) == 0){
-    echo "<script>alert('Pasien tidak ditemukan!');</script>";
-}
+// if(mysqli_num_rows($result) == 0){
+//     echo "<script>alert('Pasien tidak ditemukan!');</script>";
+// }
 ?>
 
 <!DOCTYPE html>
@@ -78,6 +78,10 @@ if(mysqli_num_rows($result) == 0){
 
 <!-- table user -->
 <div class = "user" >
+    <?php if(mysqli_num_rows($result) == 0): ?>
+    <p><em>Belum ada pasien untuk dokter ini.</em></p>
+
+    <?php else: ?>
     <table border='5'>
     <tr>
         <th colspan='4'>Daftar Pasien</th>
@@ -100,14 +104,16 @@ if(mysqli_num_rows($result) == 0){
         <td><?= $row['nama_pasien'] ?></td>
         <td><?= $row['nama_layanan'] ?></td>
         <td>
-        <a class="btnDetail" href="patient_detail.php?id=<?= $row['id'] ?>">
-        <i class="fa-solid fa-folder-open"></i> Detail
+            <a class="btnDetail" href="patient_detail.php?id=<?= $row['id'] ?>">
+                <i class="fa-solid fa-folder-open"></i> Detail
+            </a>
         </td>
 
         </tr>
 
         <?php } ?>
     </table>
+    <?php endif; ?>
 </div>
     </div>
 </body>

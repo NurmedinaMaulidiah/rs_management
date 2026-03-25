@@ -161,4 +161,27 @@ Notes :
 2. detail dan tambah rekam medis
 - doctor hanya bisa melakukan tambah rekam medis dan itu bisa dilakukan banyak kali (karena pasien bisa punya banyak rekam medis)
 
+- RELASI DAN PENGHAPUSAN DATA (DATABASE RUMAH SAKIT)
+
+1. Hapus Pasien
+   Jika pasien dihapus, maka seluruh data rekam medis yang terkait dengan pasien tersebut ikut terhapus.
+   Hal ini menggunakan relasi: ON DELETE CASCADE.
+
+2. Hapus Dokter
+   Jika dokter dihapus, maka data pasien tidak ikut terhapus.
+   Hanya kolom dokter_id pada pasien menjadi NULL.
+   Hal ini menggunakan relasi: ON DELETE SET NULL.
+
+3. Hapus Layanan
+   Jika layanan dihapus, maka data pasien tidak ikut terhapus.
+   Hanya kolom service_id pada pasien menjadi NULL.
+   Hal ini menggunakan relasi: ON DELETE SET NULL.
+
+KESIMPULAN:
+
+* CASCADE digunakan untuk data yang benar-benar bergantung (contoh: rekam medis pada pasien).
+* SET NULL digunakan agar data utama (pasien) tetap aman walaupun relasi dihapus.
+* Tujuan utama adalah menjaga integritas data agar tidak terjadi data yang tidak valid atau hilang secara tidak sengaja.
+
+
 
