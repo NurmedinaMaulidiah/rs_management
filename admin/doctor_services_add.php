@@ -1,17 +1,17 @@
 <?php
-session_start();
+session_start();// Memulai session untuk akses user
 require '../config/koneksi.php';
 
-// Ambil dokter
+// Ambil dokter dari tabel user
 $doctors = mysqli_query($conn, "SELECT * FROM users WHERE role='dokter'");
 
-// Ambil layanan
+// Ambil layanan dari tabel services
 $services = mysqli_query($conn, "SELECT * FROM services");
 
-if(isset($_POST['submit'])){
+if(isset($_POST['submit'])){// Jika tombol submit ditekan
 
-    $dokter_id = $_POST['dokter_id'] ?? '';
-    $service_ids = $_POST['service_ids'] ?? [];
+    $dokter_id = $_POST['dokter_id'] ?? '';// Ambil dokter yang dipilih
+    $service_ids = $_POST['service_ids'] ?? [];// Ambil layanan yang dicentang
 
     /* VALIDASI */
 
@@ -35,11 +35,11 @@ if(isset($_POST['submit'])){
 
     /* SIMPAN DATA */
 
-    foreach($service_ids as $sid){
+    foreach($service_ids as $sid){// Simpan tiap layanan ke tabel doctor_services
         mysqli_query($conn, "INSERT INTO doctor_services (dokter_id, service_id) 
                              VALUES ($dokter_id, $sid)");
     }
-
+//redirect ke halaman doctor_services
     echo "<script>
             alert('Layanan dokter berhasil ditambahkan!');
             window.location='doctor_services.php';
@@ -90,23 +90,24 @@ if(isset($_POST['submit'])){
         </div>
 
         <div class="boxTambahServices">
-    <div class="formInputServices">
+    <div class="formInputServices"><!-- form input doctor services -->
         <h2>Atur Layanan Dokter</h2>
         <form method="post">
             <label>Dokter</label>
             <select name="dokter_id" required>
                 <option value="">--Pilih Dokter--</option>
-                <?php mysqli_data_seek($doctors,0); while($d = mysqli_fetch_assoc($doctors)){ ?>
-                    <option value="<?= $d['id'] ?>"><?= $d['nama'] ?></option>
+                <?php mysqli_data_seek($doctors,0);// Reset pointer hasil query layanan ke baris pertama
+                while($d = mysqli_fetch_assoc($doctors)){ ?><!-- looping semua data dokter -->
+                    <option value="<?= $d['id'] ?>"><?= $d['nama'] ?></option><!-- Buat opsi dropdown untuk tiap dokter -->
                 <?php } ?>
             </select>
 
             <label>Layanan</label>
             <div class="checkbox-group">
-                <?php mysqli_data_seek($services,0); while($s = mysqli_fetch_assoc($services)){ ?>
+                <?php mysqli_data_seek($services,0); while($s = mysqli_fetch_assoc($services)){ ?><!-- looping semua data layanan -->
                     <div class="checkbox-item">
-                        <label for="service_<?= $s['id'] ?>"><?= $s['nama_layanan'] ?></label>
-                        <input type="checkbox" name="service_ids[]" id="service_<?= $s['id'] ?>" value="<?= $s['id'] ?>">
+                        <label for="service_<?= $s['id'] ?>"><?= $s['nama_layanan'] ?></label><!-- Label untuk checkbox, menampilkan nama layanan -->
+                        <input type="checkbox" name="service_ids[]" id="service_<?= $s['id'] ?>" value="<?= $s['id'] ?>"><!-- Checkbox untuk memilih layanan, name[] supaya bisa pilih banyak -->
                     </div>
                 <?php } ?>
             </div>
@@ -115,17 +116,17 @@ if(isset($_POST['submit'])){
         </form>
     </div>
 </div>
-
+<!-- Script untuk toggle sidebar -->
 <script>
-    const sidebar = document.getElementById('sidebar');
-    const toggleBtn = document.querySelector('.toggle-btn');
-    const closeBtn = document.querySelector('.close-btn');
+    const sidebar = document.getElementById('sidebar');//ambil elemen sidebar dari halaman untuk bisa dibuka atau ditutup lewat JavaScript.
+    const toggleBtn = document.querySelector('.toggle-btn');//ambil tombol yang dipakai untuk membuka sidebar.
+    const closeBtn = document.querySelector('.close-btn');//ambil tombol yang dipakai untuk menutup sidebar.
 
-    toggleBtn.addEventListener('click', () => {
+    toggleBtn.addEventListener('click', () => {// Buka sidebar
         sidebar.classList.add('open');
     });
 
-    closeBtn.addEventListener('click', () => {
+    closeBtn.addEventListener('click', () => {// tutup sidebar
         sidebar.classList.remove('open');
     });
 </script>

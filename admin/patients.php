@@ -1,21 +1,23 @@
 <?php
-session_start();
+session_start();// Mulai session untuk akses data login
 require '../config/koneksi.php';
 
-// searching
+// searching dan trim spasi
 $search = trim($_GET['search'] ?? '');
 
-// query ambil pasien + nama dokter
+// Query ambil data pasien + nama dokter + layanan
 $query = "SELECT p.*, u.nama AS dokter, s.nama_layanan
           FROM patients p
           JOIN users u ON p.dokter_id = u.id
           JOIN services s ON p.service_id = s.id";
-
-if($search != ''){
-    $query .= " WHERE p.nama_pasien LIKE '%$search%'";
+//p.* → ambil semua kolom dari tabel patients (misalnya: nama_pasien, alamat, dll)
+//u.nama AS dokter → ambil kolom nama dari tabel users, lalu diberi alias dokter (jadi nanti dipanggil $row['dokter'])
+//s.nama_layanan → ambil kolom nama_layanan dari tabel services
+if($search != ''){// Jika ada pencarian
+    $query .= " WHERE p.nama_pasien LIKE '%$search%'";// Filter berdasarkan nama pasien
 }
 
-$result = mysqli_query($conn,$query);
+$result = mysqli_query($conn,$query);// Jalankan query
 
 // cek jika data kosong
 if(mysqli_num_rows($result) == 0){
@@ -99,7 +101,7 @@ if(mysqli_num_rows($result) == 0){
         </tr>
 
         <?php
-        $no = 1;
+        $no = 1; // Nomor urut tabel bakal looping
         while($row = mysqli_fetch_assoc($result)){
         ?>
 

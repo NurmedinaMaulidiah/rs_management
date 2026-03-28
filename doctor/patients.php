@@ -1,30 +1,30 @@
 <?php
 session_start();
 require '../config/koneksi.php';
-
+// cek apakah user yang login adalah dokter
 if($_SESSION['role'] !== 'dokter'){
     header("Location: ../login.php");
     exit;
 }
 
-$doctor_id = $_SESSION['user_id'];
+$doctor_id = $_SESSION['user_id'];// ambil id dokter dari session (user yang login)
 
-// Ambil keyword pencarian (jika ada)
+// ambil input search dari URL + hapus spasi
 $search = trim($_GET['search'] ?? '');
 
-// Query ambil pasien dokter ini dengan filter search
+//intinya  Query ambil pasien dokter  berdasarkan dokter ini dengan filter search
 $sql = "SELECT p.id, p.nama_pasien, s.nama_layanan
         FROM patients p
         JOIN services s ON p.service_id = s.id
         WHERE p.dokter_id = $doctor_id";
-
+// jika ada pencarian
 if($search !== ''){
-    $sql .= " AND p.nama_pasien LIKE '%" . mysqli_real_escape_string($conn, $search) . "%'";
+    $sql .= " AND p.nama_pasien LIKE '%" . mysqli_real_escape_string($conn, $search) . "%'";// filter berdasarkan nama pasien (pakai LIKE)
 }
-
+// urutkan berdasarkan nama pasien
 $sql .= " ORDER BY p.nama_pasien";
 
-$result = mysqli_query($conn, $sql);
+$result = mysqli_query($conn, $sql);// jalankan query
 
 // Jika pasien tidak ditemukan, tampilkan alert
 // if(mysqli_num_rows($result) == 0){
@@ -49,7 +49,7 @@ $result = mysqli_query($conn, $sql);
 <div class="topbarPatients">
 
 <!-- kiri -->
-<h3 class="page-title">Dashboard Staff</h3>
+<h3 class="page-title">Dashboard Dokter</h3>
 
 <!-- kanan -->
 <div class="topbar-right">
@@ -78,7 +78,7 @@ $result = mysqli_query($conn, $sql);
 
 <!-- table user -->
 <div class = "user" >
-    <?php if(mysqli_num_rows($result) == 0): ?>
+    <?php if(mysqli_num_rows($result) == 0): ?><!-- jika tidak ada data -->
     <p><em>Belum ada pasien untuk dokter ini.</em></p>
 
     <?php else: ?>
@@ -95,7 +95,7 @@ $result = mysqli_query($conn, $sql);
         </tr>
 
         <?php
-        $no = 1;
+        $no = 1;//no urut dan bakal loop terus
         while($row = mysqli_fetch_assoc($result)){
         ?>
 

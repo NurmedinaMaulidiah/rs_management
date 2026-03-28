@@ -1,24 +1,24 @@
 <!-- ini halaman list user -->
 
 <?php
-session_start();
+session_start(); // Memulai session untuk cek login dan menampilkan nama user
 require '../config/koneksi.php';
 
 $result = mysqli_query($conn,"SELECT * FROM users");
 
 
-// searching
+// Ambil keyword pencarian dari URL, hapus spasi di depan/akhir
 $search = trim($_GET['search'] ?? '');
-
+// Query dasar untuk ambil semua user
 $query = "SELECT * FROM users";
-
+// Jika ada keyword search, tambahkan kondisi WHERE
 if($search != ''){
     $query .= " WHERE nama LIKE '%$search%' 
                 OR username LIKE '%$search%'";
 }
-$result = mysqli_query($conn,$query);
+$result = mysqli_query($conn,$query);// Jalankan query
 
-if(mysqli_num_rows($result) == 0){
+if(mysqli_num_rows($result) == 0){// Jika tidak ada data user
     echo "<script>alert('User tidak ditemukan!');</script>";
 }
 $result = mysqli_query($conn,$query);
@@ -97,7 +97,7 @@ $result = mysqli_query($conn,$query);
             <th>Aksi</th>
         </tr>
 
-        <?php
+        <?php //no urut user yg akan looping bertambah
         $no = 1;
         while($row = mysqli_fetch_assoc($result)){
         ?>
@@ -127,15 +127,15 @@ $result = mysqli_query($conn,$query);
 
   
 <script>
-const sidebar = document.getElementById('sidebar');
-const toggleBtn = document.querySelector('.toggle-btn');
-const closeBtn = document.querySelector('.close-btn');
+const sidebar = document.getElementById('sidebar');//ambil elemen sidebar dari halaman untuk bisa dibuka atau ditutup lewat JavaScript.
+const toggleBtn = document.querySelector('.toggle-btn');//ambil tombol yang dipakai untuk membuka sidebar.
+const closeBtn = document.querySelector('.close-btn');//ambil tombol yang dipakai untuk menutup sidebar.
 
-toggleBtn.addEventListener('click', () => {
+toggleBtn.addEventListener('click', () => { //buka sidebar
     sidebar.classList.add('open');
 });
 
-closeBtn.addEventListener('click', () => {
+closeBtn.addEventListener('click', () => { //tutup sidebar
     sidebar.classList.remove('open');
 });
 </script>

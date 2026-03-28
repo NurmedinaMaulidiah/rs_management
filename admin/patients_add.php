@@ -1,13 +1,13 @@
 <?php
-session_start();
+session_start();// Mulai session untuk akses data login
 require '../config/koneksi.php';
 
-// Ambil semua layanan
+// Ambil semua data layanan dari tabel services
 $services_result = mysqli_query($conn, "SELECT * FROM services");
 
-if(isset($_POST['submit'])){
+if(isset($_POST['submit'])){// Jika tombol submit ditekan
 
-    $nama = trim($_POST['nama_pasien']);
+    $nama = trim($_POST['nama_pasien']);// Ambil data dari form
     $jk = $_POST['jenis_kelamin'];
     $tgl = $_POST['tanggal_lahir'];
     $alamat = trim($_POST['alamat']);
@@ -15,7 +15,7 @@ if(isset($_POST['submit'])){
     $dokter_id = $_POST['dokter_id'];
 
     /* VALIDASI */
-    if(
+    if(// Cek semua input harus diisi
         $nama == "" ||
         $jk == "" ||
         $tgl == "" ||
@@ -48,19 +48,18 @@ if(isset($_POST['submit'])){
         exit;
     }
 
-    /* INSERT DATA */
-
+    /* INSERT DATA KE TABEL PASIEN*/
     $query = mysqli_query($conn,"INSERT INTO patients 
         (nama_pasien, jenis_kelamin, tanggal_lahir, alamat, dokter_id, service_id)
         VALUES 
         ('$nama','$jk','$tgl','$alamat','$dokter_id','$service_id')");
 
-    if($query){
+    if($query){// Jika berhasil
         echo "<script>
                 alert('Pasien berhasil ditambahkan!');
                 window.location='patients.php';
               </script>";
-    }else{
+    }else{// Jika gagal
         echo "<script>
                 alert('Gagal menambahkan pasien!');
                 window.history.back();
@@ -139,17 +138,18 @@ if(isset($_POST['submit'])){
             <option value="">--Pilih Layanan--</option>
 
             <?php
+            // Loop data layanan dari database
             while($s = mysqli_fetch_assoc($services_result)){
             ?>
 
-            <option value="<?= $s['id'] ?>">
+            <option value="<?= $s['id'] ?>"><!-- tampilkan nama layanan -->
             <?= $s['nama_layanan'] ?>
             </option>
 
             <?php } ?>
 
             </select>
-
+ <!-- Dropdown dokter (akan diisi otomatis via AJAX) -->
             <label>Dokter</label>
             <select id="dokter_id" name="dokter_id">
             <option value="">--Pilih Dokter--</option>
@@ -167,35 +167,38 @@ if(isset($_POST['submit'])){
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-
+// Ketika layanan berubah
 $('#service_id').change(function(){
 
-    var service_id = $(this).val();
+    var service_id = $(this).val();// ambil id layanan yang dipilih
 
     if(service_id){
 
-        $.ajax({
-            url:'get_doctors.php',
+        $.ajax({// AJAX ambil dokter sesuai layanan
+            url:'get_doctors.php',// file PHP untuk ambil data dokter
             type:'GET',
             data:{service_id:service_id},
 
             success:function(data){
 
-                var doctors = JSON.parse(data);
+                var doctors = JSON.parse(data);// ubah JSON ke array
 
                 var html = '<option value="">--Pilih Dokter--</option>';
 
-                doctors.forEach(function(d){
+                doctors.forEach(function(d){// looping dokter
                     html += '<option value="'+d.id+'">'+d.nama+'</option>';
                 });
 
-                $('#dokter_id').html(html);
+                $('#dokter_id').html(html);// tampilkan ke dropdown dokter
             }
 
         });
-
+        //pake ajax Supaya dropdown dokter bisa berubah otomatis tanpa reload halaman,
+//Saat user pilih layanan, sistem kirim service_id ke file PHP lewat AJAX,
+// lalu PHP ambil data dokter yang sesuai, kirim balik dalam bentuk JSON, 
+//dan hasilnya langsung ditampilkan ke dropdown dokter.
     }else{
-
+// reset dropdown dokter jika tidak pilih layanan
         $('#dokter_id').html('<option value="">--Pilih Dokter--</option>');
 
     }

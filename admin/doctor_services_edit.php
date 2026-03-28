@@ -1,10 +1,10 @@
 <?php
-session_start();
-require '../config/koneksi.php';
-
+session_start();// Memulai session untuk akses nama admin
+require '../config/koneksi.php';// Memanggil file koneksi database
+// Ambil dokter_id dari URL, jika tidak ada default 0
 $dokter_id = $_GET['dokter_id'] ?? 0;
 
-// Ambil nama dokter
+// Ambil nama dokter dari tabel users sesuai dokter_id
 $res = mysqli_query($conn, "
 SELECT u.nama
 FROM users u
@@ -12,21 +12,21 @@ WHERE u.id = $dokter_id
 LIMIT 1
 ");
 
-$row = mysqli_fetch_assoc($res);
-$nama = $row['nama'] ?? '';
+$row = mysqli_fetch_assoc($res); // Ambil hasil query sebagai array
+$nama = $row['nama'] ?? ''; // Jika tidak ada nama, kosong
 
-// Ambil semua layanan
+// Ambil semua layanan dari tabel services
 $services = mysqli_query($conn, "SELECT * FROM services");
 
 // Ambil layanan dokter saat ini
 $current = mysqli_query($conn, "SELECT service_id FROM doctor_services WHERE dokter_id=$dokter_id");
-$current_services = [];
+$current_services = [];// Array untuk menyimpan service_id dokter saat ini
 
 while($c=mysqli_fetch_assoc($current)){
-    $current_services[] = $c['service_id'];
+    $current_services[] = $c['service_id'];// Tambahkan service_id ke array
 }
 
-if(isset($_POST['submit'])){
+if(isset($_POST['submit'])){// Jika form submit ditekan
 
     // cek dokter
     if(empty($dokter_id)){
@@ -40,7 +40,7 @@ if(isset($_POST['submit'])){
 
     else{
 
-        $service_ids = $_POST['service_ids'];
+        $service_ids = $_POST['service_ids'];// Ambil array layanan yang dicentang
 
         // Hapus layanan lama dokter
         mysqli_query($conn, "DELETE FROM doctor_services WHERE dokter_id=$dokter_id");
@@ -105,22 +105,22 @@ if(isset($_POST['submit'])){
 <h2>Edit Layanan Dokter</h2>
 <form method="post">
     <label>Dokter</label>
-    <input type="text" value="<?= $nama ?>" readonly>
+    <input type="text" value="<?= $nama ?>" readonly> <!-- Tampilkan nama dokter readonly jadi gabisa diubah -->
     <label>Layanan</label>
-    <div class="checkbox-group">
+    <div class="checkbox-group"><!-- Checkbox semua layanan -->
         <?php while($s=mysqli_fetch_assoc($services)){ ?>
             <div class="checkbox-item">
-                <label for="service_<?= $s['id'] ?>">
-                    <?= $s['nama_layanan'] ?>
+                <label for="service_<?= $s['id'] ?>"><!-- Label untuk checkbox layanan -->
+                    <?= $s['nama_layanan'] ?><!-- Menampilkan nama layanan -->
                 </label>
-
+<!-- Checkbox layanan -->
                 <input 
                     type="checkbox"
-                    name="service_ids[]"
+                    name="service_ids[]"  
                     id="service_<?= $s['id'] ?>"
                     value="<?= $s['id'] ?>"
                     <?= in_array($s['id'],$current_services) ? 'checked' : '' ?>
-                >
+                ><!-- Jika layanan sudah ada, maka dicentang otomatis -->
             </div>
         <?php } ?>
     </div>
@@ -134,17 +134,19 @@ if(isset($_POST['submit'])){
 </div>
 
 <script>
-const sidebar = document.getElementById('sidebar');
-const toggleBtn = document.querySelector('.toggle-btn');
-const closeBtn = document.querySelector('.close-btn');
+const sidebar = document.getElementById('sidebar');//ambil elemen sidebar dari halaman untuk bisa dibuka atau ditutup lewat JavaScript.
+const toggleBtn = document.querySelector('.toggle-btn');//ambil tombol yang dipakai untuk membuka sidebar.
+const closeBtn = document.querySelector('.close-btn');//ambil tombol yang dipakai untuk menutup sidebar.
 
-toggleBtn.addEventListener('click', () => {
+toggleBtn.addEventListener('click', () => {//buka sidebar
     sidebar.classList.add('open');
 });
 
-closeBtn.addEventListener('click', () => {
+closeBtn.addEventListener('click', () => {//tutup sidebar
     sidebar.classList.remove('open');
 });
 </script>
 </body>
 </html>
+
+

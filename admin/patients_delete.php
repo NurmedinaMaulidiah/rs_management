@@ -2,12 +2,12 @@
 session_start();
 require '../config/koneksi.php';
 
-$id = $_GET['id'] ?? 0;
+$id = $_GET['id'] ?? 0; //ambil id pasein default 0 jika tidak ada
 
-// jalankan query dan simpan hasilnya
+// Jalankan query untuk menghapus data pasien berdasarkan ID
 $query = mysqli_query($conn, "DELETE FROM patients WHERE id=$id");
 
-if($query){
+if($query){// Jika berhasil dihapus
     echo "<script>
             alert('Pasien berhasil dihapus!');
             window.location='patients.php';

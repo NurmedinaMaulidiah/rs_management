@@ -1,23 +1,23 @@
 <?php
-session_start();
+session_start();// Memulai session untuk cek login dan menampilkan nama user
 require '../config/koneksi.php';
 
-if(isset($_POST['submit'])){
+if(isset($_POST['submit'])){// Jika tombol submit ditekan
 
-$nama = trim($_POST['nama']);
+$nama = trim($_POST['nama']);// Ambil data dari form, trim untuk hapus spasi di depan/akhir
 $username = trim($_POST['username']);
 $password = trim($_POST['password']);
 $role = $_POST['role'];
 
 /* VALIDASI FORM */
 
-// nama wajib
+// Validasi nama wajib diisi
 if(empty($nama)){
     echo "<script>alert('Nama harus diisi!');window.history.back();</script>";
     exit;
 }
 
-// username wajib
+// Validasi username wajib diisi
 if(empty($username)){
     echo "<script>alert('Username harus diisi!');window.history.back();</script>";
     exit;
@@ -54,12 +54,12 @@ if(mysqli_num_rows($cek) > 0){
 $query = mysqli_query($conn,"INSERT INTO users (nama,username,password,role)
 VALUES('$nama','$username','$password','$role')");
 
-if($query){
+if($query){   // Jika berhasil
     echo "<script>
             alert('User berhasil ditambahkan!');
             window.location='users.php';
           </script>";
-}else{
+}else{   // Jika gagal
     echo "<script>
             alert('Gagal menambahkan user!');
             window.history.back();
@@ -135,15 +135,15 @@ if($query){
 
         </div>
 <script>
-    const sidebar = document.getElementById('sidebar');
-    const toggleBtn = document.querySelector('.toggle-btn');
-    const closeBtn = document.querySelector('.close-btn');
+    const sidebar = document.getElementById('sidebar');//ambil elemen sidebar dari halaman untuk bisa dibuka atau ditutup lewat JavaScript.
+    const toggleBtn = document.querySelector('.toggle-btn');//ambil tombol yang dipakai untuk membuka sidebar.
+    const closeBtn = document.querySelector('.close-btn');//ambil tombol yang dipakai untuk menutup sidebar.
 
-    toggleBtn.addEventListener('click', () => {
+    toggleBtn.addEventListener('click', () => { //open sidebar
         sidebar.classList.add('open');
     });
 
-    closeBtn.addEventListener('click', () => {
+    closeBtn.addEventListener('click', () => { //close sidebar
         sidebar.classList.remove('open');
     });
 </script>

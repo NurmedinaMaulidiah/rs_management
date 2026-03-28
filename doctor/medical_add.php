@@ -2,24 +2,24 @@
 session_start();
 require '../config/koneksi.php';
 
-// Pastikan role dokter
+// cek apakah yang login adalah dokter
 if($_SESSION['role'] !== 'dokter'){
-    header("Location: ../login.php");
+    header("Location: ../login.php");// jika bukan dokter, redirect
     exit;
 }
 
-$doctor_id = $_SESSION['user_id'];
-$patient_id = $_GET['patient_id'] ?? 0;
+$doctor_id = $_SESSION['user_id'];// ambil id dokter login
+$patient_id = $_GET['patient_id'] ?? 0;// ambil id pasien dari URL
 
-// Ambil info pasien (pastikan pasien milik dokter)
+// ambil data pasien + layanan, sekaligus cek apakah pasien milik dokter
 $sql = "SELECT p.*, s.nama_layanan
         FROM patients p
         JOIN services s ON p.service_id = s.id
         WHERE p.id = $patient_id AND p.dokter_id = $doctor_id";
-$res = mysqli_query($conn, $sql);
+$res = mysqli_query($conn, $sql);//jalankan query
 $patient = mysqli_fetch_assoc($res);
 
-if(!$patient){
+if(!$patient){// ambil data pasien + layanan, sekaligus cek apakah pasien milik dokter
     echo "<script>alert('Pasien tidak ditemukan atau bukan pasien Anda!'); window.location='patients.php';</script>";
     exit;
 }
@@ -73,7 +73,7 @@ if(isset($_POST['submit'])){
 <a href="patient_detail.php?id=<?= $patient_id ?>" style="margin-right:10px;">
     <i class="fa-solid fa-arrow-left"></i>
     </a>
-    Dashboard Staff
+    Dashboard Dokter
     </h3>
 
 <!-- kanan -->
@@ -94,7 +94,7 @@ if(isset($_POST['submit'])){
 <div class="boxTambahUser">
     <div class="formInput">
         <h2>Tambah Rekam Medis Pasien</h2>
-
+<!-- tampilkan info pasien -->
         <div class="infoPasien">
     <p>
         <strong><i class="fa-solid fa-user"></i> Nama:</strong> 
@@ -102,6 +102,7 @@ if(isset($_POST['submit'])){
     </p>
 
     <p>
+        <!-- spesialchars itu fungsi di PHP untuk mengamankan teks supaya tidak dibaca sebagai kode HTML. -->
         <strong><i class="fa-solid fa-stethoscope"></i> Layanan:</strong> 
         <?= htmlspecialchars($patient['nama_layanan']) ?>
     </p>

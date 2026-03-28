@@ -2,28 +2,31 @@
 session_start();
 require '../config/koneksi.php';
 
-if($_SESSION['role'] !== 'dokter'){
+if($_SESSION['role'] !== 'dokter'){//cek apakah yg login dokter
     header("Location: ../login.php");
     exit;
 }
 
-$doctor_id = $_SESSION['user_id'];
-$patient_id = $_GET['id'] ?? 0;
+$doctor_id = $_SESSION['user_id'];// ambil id dokter yang login
+$patient_id = $_GET['id'] ?? 0; // ambil id pasien dari url
 
-// Pastikan pasien milik dokter
+// ambil data pasien + nama layanan
+// sekaligus memastikan pasien milik dokter yang login 
+//intinya query utk ambil data pasein +nama layanan berdasarkan dokternya
 $sql = "SELECT p.*, s.nama_layanan
         FROM patients p
         JOIN services s ON p.service_id = s.id
         WHERE p.id = $patient_id AND p.dokter_id = $doctor_id";
+//jalankan query
 $res = mysqli_query($conn, $sql);
 $patient = mysqli_fetch_assoc($res);
-
+// jika pasien tidak ditemukan atau bukan milik dokter
 if(!$patient){
     echo "Pasien tidak ditemukan atau bukan pasien Anda!";
     exit;
 }
 
-// Ambil rekam medis pasien
+// ambil semua rekam medis pasien berdasarkan id pasien
 $medicals = mysqli_query($conn, "SELECT * FROM medical_records WHERE patient_id = $patient_id ORDER BY created_at DESC");
 
 // Tambah rekam medis
@@ -57,7 +60,7 @@ $medicals = mysqli_query($conn, "SELECT * FROM medical_records WHERE patient_id 
             <a href="patients.php" style="margin-right:10px;">
             <i class="fa-solid fa-arrow-left"></i>
             </a>
-            Dashboard Staff
+            Dashboard Dokter
 </h3>
 
 <!-- kanan -->
@@ -77,7 +80,7 @@ $medicals = mysqli_query($conn, "SELECT * FROM medical_records WHERE patient_id 
 
 <!-- Tambah Rekam Medis -->
 <div class="user-header">
-<a href="medical_add.php?patient_id=<?= $patient_id ?>" class="btn-add"> <!-- jgn lupa ambil id biar bisa -->
+<a href="medical_add.php?patient_id=<?= $patient_id ?>" class="btn-add"> <!-- jgn lupa ambil id biar bisa nambah kalo gapake muncul pasien ini buka pasien dokter ini -->
     <i class="fa-solid fa-plus"></i> Tambah Rekam Medis
 </a>
 </div>
@@ -147,7 +150,7 @@ $medicals = mysqli_query($conn, "SELECT * FROM medical_records WHERE patient_id 
             </td>
         </tr>
         <?php } ?>
-
+<!-- jika belum ada rekam medis -->
         <?php if(mysqli_num_rows($medicals) == 0): ?>
         <tr>
             <td colspan="5"><em>Belum ada rekam medis untuk pasien ini.</em></td>

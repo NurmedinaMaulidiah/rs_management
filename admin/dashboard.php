@@ -1,7 +1,7 @@
 <?php
-session_start();
-require '../config/koneksi.php';
-if($_SESSION['role'] != 'admin'){
+session_start(); // Memulai session, supaya bisa mengakses data session user yg login
+require '../config/koneksi.php'; // Memanggil file koneksi database
+if($_SESSION['role'] != 'admin'){// Cek apakah user bukan admin, jika iya redirect ke login
     header("Location: ../login.php");
 }
 
@@ -42,9 +42,9 @@ $totalPatients = mysqli_fetch_assoc($totalPatientsQuery)['total'];
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2 class="logo">Healyn</h2>
-            <span class="close-btn" onclick="closeSidebar()">✖</span>
+            <span class="close-btn" onclick="closeSidebar()">✖</span> <!-- Tombol tutup sidebar -->
         </div>
-        <ul>
+        <ul><!-- list menu sidebar -->
             <li><i class="fa-solid fa-chart-line"></i><a href="dashboard.php">Dashboard</a></li>
             <li><i class="fa-solid fa-users"></i><a href="users.php">Users</a></li>
             <li><i class="fa-solid fa-hospital-user"></i><a href="patients.php">Patients</a></li>
@@ -59,21 +59,21 @@ $totalPatients = mysqli_fetch_assoc($totalPatientsQuery)['total'];
     <div class="main" id="main">
         <!-- TOPBAR -->
         <div class="topbar">
-            <span class="toggle-btn" onclick="openSidebar()">☰</span>
+            <span class="toggle-btn" onclick="openSidebar()">☰</span> <!-- Tombol buka sidebar -->
             <h3>Dashboard Admin</h3>
             <div class="admin">
                 <i class="fa-solid fa-user"></i>
-                <?= $_SESSION['nama']; ?>
+                <?= $_SESSION['nama']; ?> <!-- nama user -->
             </div>
         </div>
 
 
-        <!-- CARDS -->
+        <!-- CARDS utk statistik -->
         <div class="cards">
 
             <div class="card">
                 <h4>Total Users</h4>
-                <p><?= $totalUsers ?></p>
+                <p><?= $totalUsers ?></p> <!-- ngambil total user -->
             </div>
 
             <div class="card">
@@ -105,18 +105,18 @@ $totalPatients = mysqli_fetch_assoc($totalPatientsQuery)['total'];
     </div>
 
 </div>
-
+<!-- Script untuk toggle sidebar -->
 <script>
-const sidebar = document.getElementById('sidebar');
-const toggleBtn = document.querySelector('.toggle-btn');
-const closeBtn = document.querySelector('.close-btn');
+const sidebar = document.getElementById('sidebar'); //ambil elemen sidebar dari halaman untuk bisa dibuka atau ditutup lewat JavaScript.
+const toggleBtn = document.querySelector('.toggle-btn'); //ambil tombol yang dipakai untuk membuka sidebar.
+const closeBtn = document.querySelector('.close-btn');//ambil tombol yang dipakai untuk menutup sidebar.
 
 toggleBtn.addEventListener('click', () => {
-    sidebar.classList.add('open');
+    sidebar.classList.add('open');// Buka sidebar
 });
 
 closeBtn.addEventListener('click', () => {
-    sidebar.classList.remove('open');
+    sidebar.classList.remove('open');// tutup sidebar
 });
 </script>
 

@@ -9,17 +9,18 @@ if($_SESSION['role'] !== 'dokter'){
 }
 
 $doctor_id = $_SESSION['user_id']; // ID dokter login
-$record_id = $_GET['id'] ?? 0;
+$record_id = $_GET['id'] ?? 0;  //ambil id rekam medis dari url
 
-// Ambil rekam medis yang sesuai dokter
+// ambil data rekam medis + data pasien
+// sekaligus memastikan rekam medis milik pasien dokter ini
 $sql = "SELECT mr.*, p.nama_pasien, p.dokter_id 
         FROM medical_records mr
         JOIN patients p ON mr.patient_id = p.id
         WHERE mr.id=$record_id AND p.dokter_id=$doctor_id";
-$res = mysqli_query($conn, $sql);
+$res = mysqli_query($conn, $sql);//jalanlan query
 $record = mysqli_fetch_assoc($res);
 
-if(!$record){
+if(!$record){// jika data tidak ditemukan atau bukan milik dokter
     echo "Rekam medis tidak ditemukan atau Anda tidak berhak mengedit!";
     exit;
 }
@@ -46,7 +47,8 @@ if(isset($_POST['submit'])){
         exit;
     }
 
-    // Amankan input
+     // amankan input dari SQL Injection
+     //Pengamanan ini supaya input user tidak bisa merusak atau membobol database.
     $keluhan = mysqli_real_escape_string($conn, $keluhan);
     $diagnosa = mysqli_real_escape_string($conn, $diagnosa);
     $tindakan = mysqli_real_escape_string($conn, $tindakan);
@@ -58,14 +60,14 @@ if(isset($_POST['submit'])){
                 tindakan='$tindakan' 
               WHERE id=$record_id";
 
-    if(mysqli_query($conn, $query)){
+    if(mysqli_query($conn, $query)){ //jika berhasil
         echo "<script>
                 alert('Rekam medis berhasil diupdate!');
                 window.location='patient_detail.php?id=".$record['patient_id']."';
               </script>";
         exit;
     } else {
-        echo "<script>
+        echo "<script>//jika gagal
                 alert('Gagal mengupdate rekam medis!');
                 window.history.back();
               </script>";
@@ -90,7 +92,7 @@ if(isset($_POST['submit'])){
 <a href="patient_detail.php?id=<?= $patient_id ?>" style="margin-right:10px;">
     <i class="fa-solid fa-arrow-left"></i>
     </a>
-    Dashboard Staff
+    Dashboard Dokter
     </h3>
 
 <!-- kanan -->
@@ -116,6 +118,7 @@ if(isset($_POST['submit'])){
             <label>
                 <i class="fa-solid fa-notes-medical"></i> Keluhan
             </label>
+            <!-- otomatis keiisi berdasarkan db -->
             <textarea name="keluhan" required><?= htmlspecialchars($record['keluhan']) ?></textarea>
 
             <label>

@@ -1,22 +1,22 @@
 <?php
-session_start();
-require 'config/koneksi.php';
+session_start();// Memulai session untuk menyimpan info user setelah login
+require 'config/koneksi.php';// Memanggil file koneksi ke database
 
-if(isset($_POST['login'])){
-    $user = $_POST['user'];
+if(isset($_POST['login'])){// Jika tombol login ditekan
+    $user = $_POST['user'];// Ambil username dan password dari form
     $password = $_POST['password'];
-
+// Cari user di database berdasarkan username
     $query = mysqli_query($conn, "SELECT * FROM users WHERE username='$user'");
-    $data = mysqli_fetch_assoc($query);
+    $data = mysqli_fetch_assoc($query);// Ambil data user sebagai array
 
-    if($data){
+    if($data){// Jika user ditemukan
 
-        if($password == $data['password']){
-
+        if($password == $data['password']){// Jika user ditemukan
+// Simpan info user ke session
             $_SESSION['user_id'] = $data['id'];
             $_SESSION['nama'] = $data['nama'];
             $_SESSION['role'] = $data['role'];
-
+// Tampilkan popup selamat datang
             echo "<script>
                     alert('Selamat datang, ".$data['nama']."!');
                   </script>";
@@ -32,7 +32,7 @@ if(isset($_POST['login'])){
                 echo "<script>window.location='doctor/patients.php'</script>";
             }
 
-        } else {
+        } else {//kalo salah tampilkan allert
 
             echo "<script>
                     alert('Username atau Password salah!');
@@ -55,7 +55,7 @@ if(isset($_POST['login'])){
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style-login.css">
+    <link rel="stylesheet" href="css/style-login.css"><!-- CSS khusus halaman login -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <title>Login RS Management</title>
 </head>
@@ -69,12 +69,12 @@ if(isset($_POST['login'])){
             <div class="logo">
                 <img src="img/HealynLogo.png" alt="Logo RS" width="50%">
             </div>
-
+<!-- Input username & password -->
             <input type="text" name="user" placeholder="Username" class="input" required autocomplete="off">
             <input type="password" name="password" placeholder="Password" class="input" required autocomplete="off">
-
+ <!-- Tombol login -->
             <input type="submit" name="login" value="Login" class="submit"><br><br>
-
+<!-- Menampilkan error jika ada -->
             <?php if(isset($error)) { echo "<p style='color:red;'>$error</p>"; } ?>
         </form>
     </div>

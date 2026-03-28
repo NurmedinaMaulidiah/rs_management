@@ -1,15 +1,15 @@
 <?php
-session_start();
+session_start();// Mulai session untuk cek login dan tampilkan nama user
 require '../config/koneksi.php';
 
-$id = $_GET['id'];
-
+$id = $_GET['id']; // Ambil ID user dari URL untuk diedit
+// Ambil data user sesuai ID
 $data = mysqli_query($conn,"SELECT * FROM users WHERE id='$id'");
-$user = mysqli_fetch_assoc($data);
+$user = mysqli_fetch_assoc($data);// Simpan data user dalam array
 
-if(isset($_POST['submit'])){
+if(isset($_POST['submit'])){// Jika tombol submit ditekan
 
-$nama = trim($_POST['nama']);
+$nama = trim($_POST['nama']);// Ambil input dari form, trim untuk hapus spasi di depan/akhir
 $username = trim($_POST['username']);
 $role = $_POST['role'];
 
@@ -41,7 +41,7 @@ if(mysqli_num_rows($cek) > 0){
     exit;
 }
 
-/* UPDATE DATA */
+/* UPDATE DATA USER DI TABEL USER */
 
 $query = mysqli_query($conn,"UPDATE users SET
 nama='$nama',
@@ -113,11 +113,12 @@ if($query){
         <form method="POST">
             <!-- Nama -->
             <label for="nama">Nama</label>
-            <input type="text" id="nama" name="nama" value="<?= htmlspecialchars($user['nama']); ?>">
+            <input type="text" id="nama" name="nama" value="<?= htmlspecialchars($user['nama']); ?>"> <!-- value isi form dengan data user -->
 
             <!-- Username -->
             <label for="username">Username</label>
-            <input type="text" id="username" name="username" value="<?= htmlspecialchars($user['username']); ?>">
+            <input type="text" id="username" name="username" value="<?= htmlspecialchars($user['username']); ?>"> <!-- value isi form dengan username user -->
+
 
             <!-- Role -->
             <label for="role">Role</label>
@@ -132,16 +133,17 @@ if($query){
     </div>
 </div>
 
+<!-- SCRIPT TOGGLE SIDEBAR -->
 <script>
-const sidebar = document.getElementById('sidebar');
-const toggleBtn = document.querySelector('.toggle-btn');
-const closeBtn = document.querySelector('.close-btn');
+const sidebar = document.getElementById('sidebar');//ambil semua elemen side bar untuk buka tutup
+const toggleBtn = document.querySelector('.toggle-btn');//ambil tombol yang dipakai untuk membuka sidebar.
+const closeBtn = document.querySelector('.close-btn');//ambil tombol yang dipakai untuk menutup sidebar.
 
-toggleBtn.addEventListener('click', () => {
+toggleBtn.addEventListener('click', () => { //open sidebar
     sidebar.classList.add('open');
 });
 
-closeBtn.addEventListener('click', () => {
+closeBtn.addEventListener('click', () => { //close sidebar
     sidebar.classList.remove('open');
 });
 </script>

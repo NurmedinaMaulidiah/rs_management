@@ -1,12 +1,12 @@
 <?php
-require '../config/koneksi.php';
+require '../config/koneksi.php';// Memanggil file koneksi database
 
-// ambil dokter_id dari URL
+// Ambil dokter_id dari URL, jika tidak ada default 0
 $dokter_id = isset($_GET['dokter_id']) ? (int)$_GET['dokter_id'] : 0;
 
 // jalankan query delete
 $query = mysqli_query($conn, "DELETE FROM doctor_services WHERE dokter_id=$dokter_id");
-
+// Cek apakah query berhasil dijalankan
 if($query){
     echo "<script>
             alert('Layanan dokter berhasil dihapus!');

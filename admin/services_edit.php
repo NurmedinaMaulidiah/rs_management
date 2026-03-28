@@ -1,13 +1,13 @@
 <?php
-session_start();
+session_start();//session start ambil data user yg login
 require '../config/koneksi.php';
 
-$id = $_GET['id'];
-$service = mysqli_query($conn, "SELECT * FROM services WHERE id=$id");
+$id = $_GET['id'];//ambil id layanan dari url
+$service = mysqli_query($conn, "SELECT * FROM services WHERE id=$id");// ambil data layanan berdasarkan id
 $s = mysqli_fetch_assoc($service);
 
-if(isset($_POST['submit'])){
-    $nama = trim($_POST['nama_layanan']);
+if(isset($_POST['submit'])){ //jika submit
+    $nama = trim($_POST['nama_layanan']);// ambil inputan + hapus spasi
 
     // VALIDASI KOSONG
     if($nama == ""){
@@ -23,7 +23,7 @@ if(isset($_POST['submit'])){
                                 WHERE nama_layanan='$nama' 
                                 AND id != $id");
 
-    if(mysqli_num_rows($cek) > 0){
+    if(mysqli_num_rows($cek) > 0){ // jika nama layanan sudah ada
         echo "<script>
                 alert('Layanan sudah ada!');
                 window.history.back();
@@ -31,15 +31,15 @@ if(isset($_POST['submit'])){
         exit;
     }
 
-    // UPDATE DATA
+    // UPDATE DATA LAYANAN
     $query = mysqli_query($conn, "UPDATE services SET nama_layanan='$nama' WHERE id=$id");
 
-    if($query){
+    if($query){ //jika berhasil
         echo "<script>
                 alert('Layanan berhasil diupdate!');
                 window.location='services.php';
               </script>";
-    }else{
+    }else{//jika gagal
         echo "<script>
                 alert('Gagal mengupdate layanan!');
                 window.history.back();
@@ -97,7 +97,7 @@ if(isset($_POST['submit'])){
 
         <form method="POST">
 
-            <label>Nama Layanan</label>
+            <label>Nama Layanan</label><!-- isi otomatis dari database -->
             <input 
                 type="text" 
                 name="nama_layanan" 

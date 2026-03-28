@@ -1,12 +1,12 @@
 <?php
-session_start();
+session_start(); //mulas session untuk user yg login
 require '../config/koneksi.php';
 
-if(isset($_POST['submit'])){
+if(isset($_POST['submit'])){// cek apakah tombol submit ditekan
 
-    $nama = trim($_POST['nama_layanan']);
+    $nama = trim($_POST['nama_layanan']); // ambil input nama layanan + hapus spasi depan belakang
 
-    // cek jika kosong
+    // validasi jika kosong
     if(empty($nama)){
         echo "<script>alert('Nama layanan harus diisi!');</script>";
     }else{
@@ -14,14 +14,14 @@ if(isset($_POST['submit'])){
         // cek apakah layanan sudah ada
         $cek = mysqli_query($conn, "SELECT * FROM services WHERE nama_layanan='$nama'");
 
-        if(mysqli_num_rows($cek) > 0){
+        if(mysqli_num_rows($cek) > 0){ //jika sudah ada
             echo "<script>alert('Layanan sudah ada!');</script>";
         }else{
 
-            // insert layanan
+            // insert layanan jika belum ada di database
             $query = mysqli_query($conn, "INSERT INTO services (nama_layanan) VALUES ('$nama')");
 
-            if($query){
+            if($query){//jika berhasil
                 echo "<script>
                         alert('Layanan berhasil ditambahkan!');
                         window.location='services.php';
@@ -84,7 +84,7 @@ if(isset($_POST['submit'])){
         <h2>Tambah Layanan RS</h2>
         <form method="post">
             <label>Nama Layanan</label>
-            <input type="text" name="nama_layanan" required><br><br>
+            <input type="text" name="nama_layanan" required><br><br><!-- required biar jika kosong submitnya gabisa -->
             <button type="submit" name="submit">Simpan</button>
         </form>
         </div>

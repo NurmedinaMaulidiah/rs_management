@@ -2,18 +2,18 @@
 session_start();
 require '../config/koneksi.php';
 
-$id = $_GET['id'];
+$id = $_GET['id'];// Ambil ID pasien dari URL
 
-// ambil data pasien
+// Ambil data pasien berdasarkan ID
 $patient = mysqli_query($conn, "SELECT * FROM patients WHERE id=$id");
 $p = mysqli_fetch_assoc($patient);
 
 // ambil daftar dokter & layanan
 $doctors = mysqli_query($conn, "SELECT id, nama FROM users WHERE role='dokter'");
-$services = mysqli_query($conn, "SELECT id, nama_layanan FROM services");
+$services = mysqli_query($conn, "SELECT id, nama_layanan FROM services");// Simpan data pasien
 
-if(isset($_POST['submit'])){
-
+if(isset($_POST['submit'])){// Jika tombol submit ditekan
+ // Ambil data dari form
     $nama = trim($_POST['nama_pasien']);
     $jk = $_POST['jenis_kelamin'];
     $tgl = $_POST['tanggal_lahir'];
@@ -50,7 +50,7 @@ if(isset($_POST['submit'])){
         exit;
     }
 
-    /* UPDATE DATA */
+    /* UPDATE DATA di tabel pasien */
 
     $query = "UPDATE patients SET 
               nama_pasien='$nama',
@@ -63,7 +63,7 @@ if(isset($_POST['submit'])){
 
     $result = mysqli_query($conn, $query);
 
-    if($result){
+    if($result){//jika berhasil
         echo "<script>
                 alert('Data pasien berhasil diupdate!');
                 window.location='patients.php';
@@ -127,28 +127,28 @@ if(isset($_POST['submit'])){
 
             <form method="POST">
 
-            <label>Nama Pasien</label>
+            <label>Nama Pasien</label><!-- Input nama (value diisi dari data lama) -->
             <input type="text" name="nama_pasien" 
             value="<?= $p['nama_pasien'] ?>" 
             placeholder="Nama Pasien">
 
             <label>Jenis Kelamin</label>
-            <select name="jenis_kelamin">
+            <select name="jenis_kelamin"><!-- Dropdown jenis kelamin + auto selected -->
             <option value="">--Pilih--</option>
             <option value="L" <?= $p['jenis_kelamin']=='L'?'selected':'' ?>>Laki-laki</option>
             <option value="P" <?= $p['jenis_kelamin']=='P'?'selected':'' ?>>Perempuan</option>
             </select>
 
-            <label>Tanggal Lahir</label>
+            <label>Tanggal Lahir</label><!-- Input tanggal dengan batas max hari ini -->
             <input type="date" 
             name="tanggal_lahir" 
             value="<?= $p['tanggal_lahir'] ?>" 
             max="<?= date('Y-m-d') ?>">
 
-            <label>Alamat</label>
+            <label>Alamat</label><!-- Textarea alamat -->
             <textarea name="alamat" placeholder="Alamat Pasien"><?= $p['alamat'] ?></textarea>
 
-            <label>Layanan RS</label>
+            <label>Layanan RS</label><!-- Dropdown layanan + auto selected -->
             <!-- <select name="service_id"> -->
             <select id="service_id" name="service_id">
             <option value="">--Pilih Layanan--</option>
@@ -161,7 +161,7 @@ if(isset($_POST['submit'])){
 
             </select>
             
-            <label>Dokter</label>
+            <label>Dokter</label><!-- Dropdown dokter + auto selected -->
             <!-- <select name="dokter_id"> -->
             <select id="dokter_id" name="dokter_id">
             <option value="">--Pilih Dokter--</option>
@@ -199,19 +199,19 @@ if(isset($_POST['submit'])){
         
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
+<script>// Fungsi untuk load dokter berdasarkan layanan
 function loadDoctors(service_id, selected_dokter = null){
 
     if(service_id){
 
         $.ajax({
-            url:'get_doctors.php',
+            url:'get_doctors.php',// ambil data dokter dari PHP
             type:'GET',
             data:{service_id:service_id},
 
             success:function(data){
 
-                var doctors = JSON.parse(data);
+                var doctors = JSON.parse(data);// ubah JSON ke array
                 var html = '<option value="">--Pilih Dokter--</option>';
 
                 doctors.forEach(function(d){
@@ -240,7 +240,10 @@ $(document).ready(function(){
     var dokter_id = "<?= $p['dokter_id'] ?>";
 
     loadDoctors(service_id, dokter_id);
-});
+});//pake ajax Supaya dropdown dokter bisa berubah otomatis tanpa reload halaman,
+//Saat user pilih layanan, sistem kirim service_id ke file PHP lewat AJAX,
+// lalu PHP ambil data dokter yang sesuai, kirim balik dalam bentuk JSON, 
+//dan hasilnya langsung ditampilkan ke dropdown dokter.
 </script>
 </body>
 </html>

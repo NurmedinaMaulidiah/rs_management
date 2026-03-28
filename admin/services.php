@@ -1,20 +1,20 @@
 <!-- ini halaman list layanan -->
 <?php
-session_start();
+session_start(); //session data user yg login mulai
 require '../config/koneksi.php';
 
-// searching
+// ambil input search dari URL lalu hapus spasi depan belakang
 $search = trim($_GET['search'] ?? '');
 
-$query = "SELECT * FROM services";
+$query = "SELECT * FROM services";// query awal ambil semua data layanan
 
-if($search != ''){
+if($search != ''){// jika ada keyword pencarian cari by nama layanan
     $query .= " WHERE nama_layanan LIKE '%$search%'";
 }
 
-$result = mysqli_query($conn,$query);
+$result = mysqli_query($conn,$query);// jalankan query ke database
 
-if(mysqli_num_rows($result) == 0){
+if(mysqli_num_rows($result) == 0){// jika data tidak ditemukan
     echo "<script>alert('Layanan tidak ditemukan!');</script>";
 }
 ?>
@@ -89,7 +89,7 @@ if(mysqli_num_rows($result) == 0){
         </tr>
 
         <?php
-        $no = 1;
+        $no = 1; //no urut dan bakal loop
         while($row = mysqli_fetch_assoc($result)){
         ?>
 

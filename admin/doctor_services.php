@@ -1,9 +1,9 @@
 <?php
-session_start();
+session_start();// Mulai session untuk akses nama admin
 require '../config/koneksi.php';
 
-$search = trim($_GET['search'] ?? '');
-
+$search = trim($_GET['search'] ?? '');// Ambil input search dari URL, hapus spasi di awal/akhir
+// Query utama untuk menampilkan daftar layanan dokter
 $query = "
 SELECT ds.dokter_id, u.nama AS dokter,
 GROUP_CONCAT(s.nama_layanan SEPARATOR ', ') AS layanan
@@ -11,17 +11,17 @@ FROM doctor_services ds
 JOIN users u ON ds.dokter_id = u.id
 JOIN services s ON ds.service_id = s.id
 ";
-
+// kondisi search jika ada input dari user
 if($search != ''){
     $query .= " WHERE u.nama LIKE '%$search%' 
                 OR s.nama_layanan LIKE '%$search%'";
 }
-
+// Group berdasarkan dokter_id agar layanan tergabung per dokter
 $query .= "
 GROUP BY ds.dokter_id
 ORDER BY u.nama
 ";
-
+// Jalankan query
 $result = mysqli_query($conn,$query);
 
 // cek jika data kosong
@@ -102,7 +102,7 @@ if(mysqli_num_rows($result) == 0){
         </tr>
 
         <?php
-        $no = 1;
+        $no = 1; //no urut bakal looping dan bertambahk
         while($row = mysqli_fetch_assoc($result)){
         ?>
 
@@ -131,6 +131,7 @@ if(mysqli_num_rows($result) == 0){
     </div>
 
 <script>
+    //script sidebar buka/tutup
 const sidebar = document.getElementById('sidebar');
 const toggleBtn = document.querySelector('.toggle-btn');
 const closeBtn = document.querySelector('.close-btn');
