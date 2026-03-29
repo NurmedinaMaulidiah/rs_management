@@ -138,7 +138,7 @@ if(isset($_POST['submit'])){// Jika tombol submit ditekan
             <option value="">--Pilih Layanan--</option>
 
             <?php
-            // Loop data layanan dari database
+            // Loop data layanan dari database, jadi data layanan semuanya akan tampil dari tabel services
             while($s = mysqli_fetch_assoc($services_result)){
             ?>
 
@@ -150,6 +150,7 @@ if(isset($_POST['submit'])){// Jika tombol submit ditekan
 
             </select>
  <!-- Dropdown dokter (akan diisi otomatis via AJAX) -->
+ <!-- pake ajax biar dokter yang tampil selalu berubah sesuai layanan yang dipilih,tanpa reload -->
             <label>Dokter</label>
             <select id="dokter_id" name="dokter_id">
             <option value="">--Pilih Dokter--</option>
@@ -163,35 +164,37 @@ if(isset($_POST['submit'])){// Jika tombol submit ditekan
     </div>
 
 
-
+<!-- library jcquery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-// Ketika layanan berubah
+//ketika user pilih layanan baru maka fungsi ini jalan, yaitu...
 $('#service_id').change(function(){
 
     var service_id = $(this).val();// ambil id layanan yang dipilih
 
-    if(service_id){
-
+    if(service_id){//cek apakah user pilih layanan, kalau iya jalankan ajax, kalo ga pilih layanan reset dropdown jadi pilih dokter
+//jalankan ajax
         $.ajax({// AJAX ambil dokter sesuai layanan
-            url:'get_doctors.php',// file PHP untuk ambil data dokter
+            url:'get_doctors.php',// server php ambil data dokter sesuai layanan dari db, trs data dokter dikembalikan ke json biar bisa dipake ajax
             type:'GET',
-            data:{service_id:service_id},
+            data:{service_id:service_id},//tanpa relaod
 
-            success:function(data){
+            success:function(data){//fungsi untuk kembalikan data dokter dalam format json biar bisa di looping sama js
 
-                var doctors = JSON.parse(data);// ubah JSON ke array
+                var doctors = JSON.parse(data);// ubah  data dokter dari JSON string jadi array JavaScript.
 
-                var html = '<option value="">--Pilih Dokter--</option>';
+                var html = '<option value="">--Pilih Dokter--</option>';//reset dropdown biar user pilih dokter
 
-                doctors.forEach(function(d){// looping dokter
+                doctors.forEach(function(d){// masukkan data dokter array biar di looping untuk dropdown
                     html += '<option value="'+d.id+'">'+d.nama+'</option>';
                 });
 
-                $('#dokter_id').html(html);// tampilkan ke dropdown dokter
+                $('#dokter_id').html(html);// tampilkan ke dropdown dokter dengan reload otomatis
             }
-
+            //Pilih layanan → server PHP (get_doctors.php) ambil dokter →
+            // kirim data JSON → diubah jadi array JS → looping isi dropdown dengan ID & nama dokter 
+            //→ dropdown berubah otomatis tanpa reload.
         });
         //pake ajax Supaya dropdown dokter bisa berubah otomatis tanpa reload halaman,
 //Saat user pilih layanan, sistem kirim service_id ke file PHP lewat AJAX,
@@ -224,3 +227,7 @@ $('#service_id').change(function(){
 
 </body>
 </html>
+
+<!-- JSON format standar untuk bertukar data antara server dan browser. -->
+<!-- //server ke browser kirim data dalam bentuk json
+//jadi harus di ubah ke array biar bisa dilooping sama js -->

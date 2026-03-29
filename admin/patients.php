@@ -5,7 +5,7 @@ require '../config/koneksi.php';
 // searching dan trim spasi
 $search = trim($_GET['search'] ?? '');
 
-// Query ambil data pasien + nama dokter + layanan
+// Query ambil data pasien + nama dokter + layanan untuk ditampilkan di tabel
 $query = "SELECT p.*, u.nama AS dokter, s.nama_layanan
           FROM patients p
           JOIN users u ON p.dokter_id = u.id

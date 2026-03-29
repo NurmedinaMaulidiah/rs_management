@@ -97,7 +97,7 @@ if(isset($_POST['submit'])){// Jika tombol submit ditekan
             <select name="dokter_id" required>
                 <option value="">--Pilih Dokter--</option>
                 <?php mysqli_data_seek($doctors,0);// Reset pointer hasil query layanan ke baris pertama
-                while($d = mysqli_fetch_assoc($doctors)){ ?><!-- looping semua data dokter -->
+                while($d = mysqli_fetch_assoc($doctors)){ ?><!-- looping semua data dokter INTINYA UNTUK NAMPILIN DATA DOKTER SECARA BERULANG -->
                     <option value="<?= $d['id'] ?>"><?= $d['nama'] ?></option><!-- Buat opsi dropdown untuk tiap dokter -->
                 <?php } ?>
             </select>

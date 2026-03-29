@@ -12,7 +12,7 @@ WHERE u.id = $dokter_id
 LIMIT 1
 ");
 
-$row = mysqli_fetch_assoc($res); // Ambil hasil query sebagai array
+$row = mysqli_fetch_assoc($res); // Ambil hasil query nama dokter sebagai array
 $nama = $row['nama'] ?? ''; // Jika tidak ada nama, kosong
 
 // Ambil semua layanan dari tabel services

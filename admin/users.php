@@ -3,7 +3,7 @@
 <?php
 session_start(); // Memulai session untuk cek login dan menampilkan nama user
 require '../config/koneksi.php';
-
+//query utk tampilkan data semua user dari table users
 $result = mysqli_query($conn,"SELECT * FROM users");
 
 
