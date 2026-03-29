@@ -60,7 +60,7 @@
 /* CHECKBOX GROUP */
 .checkbox-group{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* atur kolom checkbox sesuai lebar layar, kalo lebar maka banyak kolomnya */
     gap:10px;
     margin-top:10px;
 }

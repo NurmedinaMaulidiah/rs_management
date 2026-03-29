@@ -98,6 +98,8 @@ body{
 }
 
 .btn-delete {
+    /* membuat elemen menjadi fleksibel untuk mengatur isi (misal checkbox, tombol, label)
+     tapi tetap berada di baris yang sama dengan elemen lain. */
     display: inline-flex;
     align-items: center;
     gap: 5px;

@@ -144,6 +144,8 @@ if(isset($_POST['submit'])){
             <?= $s['nama_layanan'] ?>
             </option>
             <?php } ?>
+            <!-- Jika layanan sama dengan service lama pasien ($p['service_id']), 
+            maka <option> itu otomatis terpilih saat halaman edit. -->
 
             </select>
             <label>Dokter</label>

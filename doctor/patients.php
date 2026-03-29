@@ -12,7 +12,7 @@ $doctor_id = $_SESSION['user_id'];// ambil id dokter dari session (user yang log
 // ambil input search dari URL + hapus spasi
 $search = trim($_GET['search'] ?? '');
 
-//intinya  Query ambil pasien dokter  berdasarkan dokter ini dengan filter search
+//intinya  Query ambil pasien dokter  berdasarkan dokter yg sedang login ini dengan filter search
 $sql = "SELECT p.id, p.nama_pasien, s.nama_layanan
         FROM patients p
         JOIN services s ON p.service_id = s.id
@@ -21,7 +21,7 @@ $sql = "SELECT p.id, p.nama_pasien, s.nama_layanan
 if($search !== ''){
     $sql .= " AND p.nama_pasien LIKE '%" . mysqli_real_escape_string($conn, $search) . "%'";// filter berdasarkan nama pasien (pakai LIKE)
 }
-// urutkan berdasarkan nama pasien
+// urutkan berdasarkan nama pasien by abjad
 $sql .= " ORDER BY p.nama_pasien";
 
 $result = mysqli_query($conn, $sql);// jalankan query

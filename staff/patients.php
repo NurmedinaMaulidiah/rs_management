@@ -10,7 +10,7 @@ if($_SESSION['role'] !== 'staff'){
 // searching
 $search = trim($_GET['search'] ?? '');
 
-// query ambil pasien + nama dokter
+// query ambil pasien + nama dokter 
 $query = "SELECT p.*, u.nama AS dokter, s.nama_layanan
           FROM patients p
           JOIN users u ON p.dokter_id = u.id

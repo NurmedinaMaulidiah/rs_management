@@ -131,11 +131,11 @@ if(isset($_POST['submit'])){
             ?>
 
             <option value="<?= $s['id'] ?>">
-            <?= $s['nama_layanan'] ?>
+            <?= $s['nama_layanan'] ?> /
             </option>
 
             <?php } ?>
-
+<!-- s itu var menyimpan service yg dipilih tuntuk sementara  -->
             </select>
 
             <label>Dokter</label>

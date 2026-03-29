@@ -26,7 +26,7 @@ if(!$patient){
     exit;
 }
 
-// ambil semua rekam medis pasien berdasarkan id pasien
+// ambil semua rekam medis pasien berdasarkan id pasien dan ururt descending dari yg oaling baru
 $medicals = mysqli_query($conn, "SELECT * FROM medical_records WHERE patient_id = $patient_id ORDER BY created_at DESC");
 
 // Tambah rekam medis
@@ -97,7 +97,7 @@ $medicals = mysqli_query($conn, "SELECT * FROM medical_records WHERE patient_id 
     <tr>
         <td><strong>Nama</strong></td>
         <td><?= htmlspecialchars($patient['nama_pasien']) ?></td>
-
+<!-- spesialchars buat amanin data pasien supaya apa pun yang diketik user ditampilkan sebagai teks biasa, -->
         <td><strong>Layanan</strong></td>
         <td><?= htmlspecialchars($patient['nama_layanan']) ?></td>
     </tr>
