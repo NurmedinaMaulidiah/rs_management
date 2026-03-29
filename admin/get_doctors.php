@@ -1,5 +1,3 @@
-<!-- digunkana sbg server utk mengambil data dokter dari tabel user
-menampilkna nama dokter berdasarkan layanan atau services yg dipilih -->
 <?php
 require '../config/koneksi.php';  // Hubungkan ke database
 
@@ -8,7 +6,7 @@ $service_id = intval($_GET['service_id'] ?? 0);// Ambil service_id dari paramete
 $doctors = [];// Siapkan array kosong untuk menyimpan hasil dokter
 
 if($service_id){// Jika service_id ada (tidak nol)
-// jalankan Query untuk menampilkna nama dokter berdasarkan layanan atau services yg dipilih
+// Query untuk ambil dokter (nama dan id) dari tabel user  yang menyediakan layanan tertentu (servicesid), lalu tampilkna berdasrkan nama dokter
     $sql = "SELECT u.id, u.nama
             FROM users u
             JOIN doctor_services ds ON u.id = ds.dokter_id
@@ -16,7 +14,7 @@ if($service_id){// Jika service_id ada (tidak nol)
             ORDER BY u.nama";
 //intinya menampilkna nama dokter berdasarkan layanan atau services yg dipilih
     $result = mysqli_query($conn,$sql);
-// Masukkan setiap dokter yg bertugas di layanan itu ke array $doctors
+// Masukkan setiap dokter ke array $doctors
     while($row = mysqli_fetch_assoc($result)){
         $doctors[] = $row;
     }
