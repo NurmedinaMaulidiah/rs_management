@@ -165,7 +165,7 @@ if(isset($_POST['submit'])){// Jika tombol submit ditekan
             <!-- <select name="dokter_id"> -->
             <select id="dokter_id" name="dokter_id">
             <option value="">--Pilih Dokter--</option>
-
+<!-- aku tetap pake selected walaupun di ajax ada fungsi nampilin data lama sblm di edit -->
             <?php while($d = mysqli_fetch_assoc($doctors)){ ?>
             <option value="<?= $d['id'] ?>" <?= $p['dokter_id']==$d['id']?'selected':'' ?>>
             <?= $d['nama'] ?>
@@ -200,7 +200,7 @@ if(isset($_POST['submit'])){// Jika tombol submit ditekan
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>// Fungsi untuk load dokter berdasarkan layanan
-function loadDoctors(service_id, selected_dokter = null){
+function loadDoctors(service_id, selected_dokter = null){ //fungsi dgn isi id layanan dan dokter yg sudah dipilih 
 
     if(service_id){
 
@@ -208,42 +208,40 @@ function loadDoctors(service_id, selected_dokter = null){
             url:'get_doctors.php',// ambil data dokter dari PHP
             type:'GET',
             data:{service_id:service_id},
-
+// jika server berhasil merespon
             success:function(data){
 
                 var doctors = JSON.parse(data);// ubah JSON ke array
                 var html = '<option value="">--Pilih Dokter--</option>';
-
+//masukkan array ke dalam dropdown
                 doctors.forEach(function(d){
-                    if(selected_dokter == d.id){
-                        html += '<option value="'+d.id+'" selected>'+d.nama+'</option>';
+                    if(selected_dokter == d.id){//cek jika dokter sama dengan dokter yang sudah dipilih sebelumnya
+                        html += '<option value="'+d.id+'" selected>'+d.nama+'</option>'; //tampilkan sebagai default terpilih
                     }else{
-                        html += '<option value="'+d.id+'">'+d.nama+'</option>';
+                        html += '<option value="'+d.id+'">'+d.nama+'</option>'; //jika tidak tampilkan dokter lain
                     }
                 });
 
-                $('#dokter_id').html(html);
+                $('#dokter_id').html(html);// update dropdown dokter di halaman
             }
         });
 
     }
 }
 
-// saat layanan diganti
+// ketika layanan diganti
 $('#service_id').change(function(){
-    loadDoctors($(this).val());
+    loadDoctors($(this).val());//panggil fungsi loadDoctors dengan service_id baru biar ajax tetap jalan
 });
 
-// saat pertama kali load (edit mode)
-$(document).ready(function(){
+// saat pertama kali load (edit mode) dokter dan layana sudah terisi
+$(document).ready(function(){ //fungsi untuk menampilkan layanan dan dokter lama sebelum di update
     var service_id = $('#service_id').val();
     var dokter_id = "<?= $p['dokter_id'] ?>";
 
     loadDoctors(service_id, dokter_id);
 });//pake ajax Supaya dropdown dokter bisa berubah otomatis tanpa reload halaman,
-//Saat user pilih layanan, sistem kirim service_id ke file PHP lewat AJAX,
-// lalu PHP ambil data dokter yang sesuai, kirim balik dalam bentuk JSON, 
-//dan hasilnya langsung ditampilkan ke dropdown dokter.
+
 </script>
 </body>
 </html>

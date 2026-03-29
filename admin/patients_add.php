@@ -179,7 +179,7 @@ $('#service_id').change(function(){
             url:'get_doctors.php',// server php ambil data dokter sesuai layanan dari db, trs data dokter dikembalikan ke json biar bisa dipake ajax
             type:'GET',
             data:{service_id:service_id},//tanpa relaod
-
+// jika server berhasil merespon
             success:function(data){//fungsi untuk kembalikan data dokter dalam format json biar bisa di looping sama js
 
                 var doctors = JSON.parse(data);// ubah  data dokter dari JSON string jadi array JavaScript.
