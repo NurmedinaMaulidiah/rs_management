@@ -2,7 +2,7 @@
 session_start(); // Memulai session, supaya bisa mengakses data session user yg login
 require '../config/koneksi.php'; // Memanggil file koneksi database
 if($_SESSION['role'] != 'admin'){// Cek apakah user bukan admin, jika iya redirect ke login
-    header("Location: ../login.php");
+    header("Location: ../index.php");
 }
 
 // / Total semua user

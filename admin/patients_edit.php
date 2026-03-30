@@ -108,7 +108,7 @@ if(isset($_POST['submit'])){// Jika tombol submit ditekan
     </div>
 
     <!-- MAIN CONTENT -->
-    <div class="mainPatients" id="main">
+    <div class="main" id="main">
         <!-- TOPBAR -->
         <div class="topbarPatients">
             <span class="toggle-btn" onclick="openSidebar()">☰</span>

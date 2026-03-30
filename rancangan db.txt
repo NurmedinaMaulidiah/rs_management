@@ -163,19 +163,49 @@ Notes :
 
 - RELASI DAN PENGHAPUSAN DATA (DATABASE RUMAH SAKIT)
 
-1. Hapus Pasien
-   Jika pasien dihapus, maka seluruh data rekam medis yang terkait dengan pasien tersebut ikut terhapus.
-   Hal ini menggunakan relasi: ON DELETE CASCADE.
+Kesimpulan Proses Hapus Data di Sistem RS
 
-2. Hapus Dokter
-   Jika dokter dihapus, maka data pasien tidak ikut terhapus.
-   Hanya kolom dokter_id pada pasien menjadi NULL.
-   Hal ini menggunakan relasi: ON DELETE SET NULL.
+1. Hapus Dokter (User role = dokter)
+Sebelumnya: Hapus dokter → pasien dan rekam medis ikut terhapus → masalah.
+Sekarang:
+Dicek dulu apakah dokter masih memiliki pasien.
+Jika masih ada pasien → tidak bisa hapus dokter.
+Pasien tetap ada, rekam medis tetap ada.
+✅ Aman, data pasien tidak hilang sembarangan.
 
-3. Hapus Layanan
-   Jika layanan dihapus, maka data pasien tidak ikut terhapus.
-   Hanya kolom service_id pada pasien menjadi NULL.
-   Hal ini menggunakan relasi: ON DELETE SET NULL.
+2. Hapus Layanan RS
+Sebelumnya: Hapus layanan → error atau pasien ikut hilang → masalah.
+Sekarang:
+Dicek dulu apakah layanan masih digunakan oleh pasien.
+Jika masih dipakai pasien → layanan tidak bisa dihapus.
+✅ Aman, integritas data pasien tetap terjaga.
+
+3. Hapus Layanan yang Diberikan Dokter (doctor_services)
+Menghapus relasi dokter → layanan tidak menghapus pasien.
+Nama dokter dan nama layanan di tabel pasien tetap ada.
+Jika perlu, pasien dapat diedit untuk mengganti dokter/layanan.
+✅ Aman, normal, dan tidak menimbulkan masalah.
+
+4. Hapus Rekam Medis
+Hapus rekam medis → hanya rekam medis yang terhapus, pasien tetap ada.
+✅ Aman, sesuai logika CASCADE.
+
+5. Hapus Pasien
+Hapus pasien → seluruh data pasien termasuk rekam medis ikut terhapus (ON DELETE CASCADE).
+✅ Aman, logis, data rekam medis tergantung pasien.
+
+6. Edit layanan dokter
+- Jika layanan dokter diubah (misalnya dari 2 layanan menjadi 1 layanan):
+- Perubahan hanya berlaku untuk data relasi dokter-layanan ke depan.
+- Data pasien lama tidak ikut berubah.
+- Pasien yang sebelumnya sudah terdaftar:
+- Tetap memiliki dokter dan layanan lama di tabel patients.
+- Masih bisa dilihat oleh dokter tersebut.
+- Dokter masih bisa menambahkan rekam medis pasien tersebut.
+- Jika ingin menyesuaikan:
+Admin/Staff dapat mengedit data pasien (mengganti dokter atau layanan).
+Setelah diganti, dokter baru dapat melihat dan melanjutkan rekam medis pasien tersebut.
+
 
 KESIMPULAN:
 

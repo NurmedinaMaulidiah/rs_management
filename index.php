@@ -36,7 +36,7 @@ if(isset($_POST['login'])){// Jika tombol login ditekan
 
             echo "<script>
                     alert('Username atau Password salah!');
-                    window.location='login.php';
+                    window.location='index.php';
                   </script>";
         }
 
@@ -44,7 +44,7 @@ if(isset($_POST['login'])){// Jika tombol login ditekan
 
         echo "<script>
                 alert('Username & Password Tidak Terdaftar, Silahkan Registrasi!');
-                window.location='login.php';
+                window.location='index.php';
               </script>";
     }
 }

@@ -9,7 +9,7 @@ if(isset($_SESSION['nama'])){// Cek apakah user sedang login
 // Tampilkan pesan berhasil logout dan arahkan ke halaman login
     echo "<script>
             alert('Berhasil logout!');
-            window.location='login.php';
+            window.location='index.php';
           </script>";
     exit; //berhentikan eksekusi script
 
@@ -17,7 +17,7 @@ if(isset($_SESSION['nama'])){// Cek apakah user sedang login
 
     echo "<script>
             alert('Anda belum login!');
-            window.location='login.php';
+            window.location='index.php';
           </script>";
     exit;
 

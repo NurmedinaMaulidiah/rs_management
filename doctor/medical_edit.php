@@ -4,7 +4,7 @@ require '../config/koneksi.php';
 
 // Pastikan role dokter
 if($_SESSION['role'] !== 'dokter'){
-    header("Location: ../login.php");
+    header("Location: ../index.php");
     exit;
 }
 
@@ -89,7 +89,7 @@ if(isset($_POST['submit'])){
 <body>
 <div class="topbarPatients">
 <h3>
-<a href="patient_detail.php?id=<?= $patient_id ?>" style="margin-right:10px;">
+<a href="patient_detail.php?id=<?= $record['patient_id'] ?>" style="margin-right:10px;">
     <i class="fa-solid fa-arrow-left"></i>
     </a>
     Dashboard Dokter

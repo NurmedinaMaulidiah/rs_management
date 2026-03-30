@@ -3,7 +3,7 @@ session_start();
 require '../config/koneksi.php';
 
 if($_SESSION['role'] !== 'dokter'){//cek apakah yg login dokter
-    header("Location: ../login.php");
+    header("Location: ../index.php");
     exit;
 }
 

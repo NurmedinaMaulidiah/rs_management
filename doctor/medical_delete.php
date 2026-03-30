@@ -4,7 +4,7 @@ require '../config/koneksi.php';
 
 // Cek role dokter
 if($_SESSION['role'] !== 'dokter'){
-    header("Location: ../login.php");
+    header("Location: ../index.php");
     exit;
 }
 

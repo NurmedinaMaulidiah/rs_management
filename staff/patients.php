@@ -4,7 +4,7 @@ require '../config/koneksi.php';
 
 // Pastikan role = staff
 if($_SESSION['role'] !== 'staff'){
-    header("Location: ../login.php");
+    header("Location: ../index.php");
     exit;
 }
 // searching
@@ -23,9 +23,9 @@ if($search != ''){
 $result = mysqli_query($conn,$query);
 
 // cek jika data kosong
-if(mysqli_num_rows($result) == 0){
-    echo "<script>alert('Pasien tidak ditemukan!');</script>";
-}
+// if(mysqli_num_rows($result) == 0){
+//     echo "<script>alert('Pasien tidak ditemukan!');</script>";
+// }
 ?>
 
 <!DOCTYPE html>

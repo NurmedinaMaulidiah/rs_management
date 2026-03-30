@@ -4,7 +4,7 @@ require '../config/koneksi.php';
 
 // cek apakah yang login adalah dokter
 if($_SESSION['role'] !== 'dokter'){
-    header("Location: ../login.php");// jika bukan dokter, redirect
+    header("Location: ../index.php");// jika bukan dokter, redirect
     exit;
 }
 
